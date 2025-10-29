@@ -19,22 +19,25 @@ head(dados)
 # Verificar si hay algún NA en la base
 anyNA(dados)
 
-# Proporción de la variable respuesta en toda la base de datos
-table(dados$diabetes) 
 # devuelve una tabla con la frecuencia absoluta de cada clase
+table(dados$diabetes) 
 
+# Proporción de la variable respuesta en toda la base de datos
 prop.table(table(dados$diabetes))
+
 # transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
 
 # Nombres de las variables
 vars <- colnames(dados)
-# accede al nombre de las variables
 
+# accede al nombre de las variables
 vars
+
 # verifica si los nombres fueron seleccionados
 
 # Diseño: 3 filas x 3 columnas (9 boxplots)
 par(mfrow = c(3, 3))
+
 # para construir 9 gráficos dispuestos en 3 filas y 3 columnas
 
 # Bucle para generar los boxplots
@@ -45,7 +48,6 @@ for (var in vars) {
           ylab = var,
           main = paste(var))
 }
-
 
 ################################### DESBALANCEADO #############################################
 
@@ -69,12 +71,13 @@ head(dados)
 # Verificar si hay algún NA en la base
 anyNA(dados)
 
-# Proporción de la variable respuesta en toda la base de datos
-table(dados$diabetes) 
 # devuelve una tabla con la frecuencia absoluta de cada clase
+table(dados$diabetes) 
 
-prop.table(table(dados$diabetes))
 # transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
+
+# Proporción de la variable respuesta en toda la base de datos
+prop.table(table(dados$diabetes))
 
 # Aplicando árboles de clasificación
 library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado, bootstrap, etc.)
@@ -150,12 +153,15 @@ head(dados)
 # Verificar si hay algún NA en la base
 anyNA(dados)
 
-# Proporción de la variable respuesta en toda la base de datos
-table(dados$diabetes) 
-# devuelve una tabla con la frecuencia absoluta de cada clase
 
-prop.table(table(dados$diabetes))
+# devuelve una tabla con la frecuencia absoluta de cada clase
+table(dados$diabetes) 
+
 # transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
+
+# Proporción de la variable respuesta en toda la base de datos
+prop.table(table(dados$diabetes))
+
 
 # Paquetes
 library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado, bootstrap, etc.)
