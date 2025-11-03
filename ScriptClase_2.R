@@ -1,108 +1,64 @@
+#################################################################################
+## Códigos - Detección de diabetes                                            ##
+## Asignatura: Topicos en Ciencias de Datos                                   ##
+## Profesor: Ricardo Felipe Ferreira                                          ##
+## Año: 2025/2                                                                ##
+#################################################################################
+
 ################################### ANÁLISIS DESCRIPTIVO #############################################
 
-library(mlbench) # es la biblioteca donde se encuentra la base de datos
-library(ggplot2) # para crear el gráfico de medio violín y otros según sea necesario
-library(gghalves) # para crear el gráfico de medio violín 
+library(mlbench)  # biblioteca que contiene la base de datos
+library(ggplot2)  # para crear gráficos de medio-violín y otros necesarios
+library(gghalves) # para el gráfico de medio-violín
 
-# Accediendo a la base de datos PimaIndiansDiabetes dentro de la biblioteca cargada
+# Acceder a la base de datos PimaIndiansDiabetes dentro de la biblioteca cargada
 data(PimaIndiansDiabetes)
 
-# Asignando la base de datos al objeto "dados"
-dados <- PimaIndiansDiabetes
+# Almacenar la base de datos en el objeto "datos"
+datos <- PimaIndiansDiabetes
 
-# Verificando si la asignación fue exitosa
-dados
+# Verificar si la asignación fue exitosa
+datos
 
-# Observando las primeras observaciones
-head(dados)
+# Observar las primeras observaciones
+head(datos)
 
-# Verificar si hay algún NA en la base
-anyNA(dados)
-
-# devuelve una tabla con la frecuencia absoluta de cada clase
-table(dados$diabetes) 
+# Verificar si existe algún NA en la base
+anyNA(datos)
 
 # Proporción de la variable respuesta en toda la base de datos
-prop.table(table(dados$diabetes))
+table(datos$diabetes) 
+# devuelve una tabla con la frecuencia absoluta de cada clase
 
-# transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
+prop.table(table(datos$diabetes))
+# transforma la tabla de frecuencias absolutas en una tabla de frecuencias relativas
 
-# Nombres de las variables
-vars <- colnames(dados)
-
-# accede al nombre de las variables
-vars
-
-# verifica si los nombres fueron seleccionados
-
-# Diseño: 3 filas x 3 columnas (9 boxplots)
-par(mfrow = c(3, 3))
-
-# para construir 9 gráficos dispuestos en 3 filas y 3 columnas
-
-# Bucle para generar los boxplots
-for (var in vars) {
-  boxplot(dados[[var]] ~ dados$diabetes,
-          col = c("steelblue", "tomato"),
-          names = c("Negativo", "Positivo"),
-          ylab = var,
-          main = paste(var))
-}
 
 ################################### DESBALANCEADO #############################################
 
-# Paquetes necesarios en este caso
-library(mlbench) # es la biblioteca donde se encuentra la base de datos
-library(ggplot2) # para crear el gráfico de medio violín y otros según sea necesario
-library(gghalves) # para crear el gráfico de medio violín 
-
-# Accediendo a la base de datos PimaIndiansDiabetes dentro de la biblioteca cargada
-data(PimaIndiansDiabetes)
-
-# Asignando la base de datos al objeto "dados"
-dados <- PimaIndiansDiabetes
-
-# Verificando si la asignación fue exitosa
-dados
-
-# Observando las primeras observaciones
-head(dados)
-
-# Verificar si hay algún NA en la base
-anyNA(dados)
-
-# devuelve una tabla con la frecuencia absoluta de cada clase
-table(dados$diabetes) 
-
-# transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
-
-# Proporción de la variable respuesta en toda la base de datos
-prop.table(table(dados$diabetes))
-
-# Aplicando árboles de clasificación
-library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado, bootstrap, etc.)
+library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado)
 set.seed(125)
 
-# realiza la división estratificada por la variable Y
-split <- initial_split(dados, prop = 0.7, strata = "diabetes")
+# División estratificada por la variable Y
+split <- initial_split(datos, prop = 0.7, strata = "diabetes")
 
-treino <- training(split) # 70% para el entrenamiento
-teste  <- testing(split)  # 30% para la prueba
+entrenamiento <- training(split) # 70% para entrenamiento
+prueba        <- testing(split)  # 30% para prueba
 
-# Verificando proporción de clases
-prop.table(table(dados$diabetes))
-prop.table(table(treino$diabetes))
-prop.table(table(teste$diabetes))
+# Verificando la proporción de clases
+prop.table(table(datos$diabetes))
+prop.table(table(entrenamiento$diabetes))
+prop.table(table(prueba$diabetes))
 
-# Ajustar nuevamente el árbol
+# Ajuste del árbol de clasificación
 library(rpart)
-arvore <- rpart(diabetes ~ ., data = treino, method = "class")
+arbol <- rpart(diabetes ~ ., data = entrenamiento, method = "class")
 
 # Predicción en el conjunto de prueba
-pred <- predict(arvore, newdata = teste, type = "class")
+pred <- predict(arbol, newdata = prueba, type = "class")
 
-# crea la matriz de confusión
-cm <- table(Previsto = pred, Observado = teste$diabetes)
+# Matriz de confusión
+cm <- table(Predicho = pred, Observado = prueba$diabetes)
 cm
 
 TP <- cm["pos","pos"]
@@ -110,134 +66,72 @@ TN <- cm["neg","neg"]
 FP <- cm["pos","neg"]
 FN <- cm["neg","pos"]
 
-acuracia       <- (TP + TN) / sum(cm)
-sensibilidade  <- TP / (TP + FN)   
-especificidade <- TN / (TN + FP)
-VPP <- TP / (TP + FP)   # Valor predictivo positivo (precisión)
-VPN <- TN / (TN + FN)   # Valor predictivo negativo
-gmedia <- sqrt(sensibilidade*especificidade)
-# media geométrica entre sensibilidad y especificidad
-f1 <- 2 * (VPP * sensibilidade) / (VPP + sensibilidade)
-# media armónica entre sensibilidad y precisión
+exactitud       <- (TP + TN) / sum(cm)
+sensibilidad    <- TP / (TP + FN)
+especificidad   <- TN / (TN + FP)
+VPP             <- TP / (TP + FP)   # Valor predictivo positivo (precisión)
+VPN             <- TN / (TN + FN)   # Valor predictivo negativo
+gmedia          <- sqrt(sensibilidad * especificidad) # media geométrica
+f1              <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad) # media armónica
+MCC             <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP)*(TP + FN)*(TN + FP)*(TN + FN)) # coeficiente de Matthews
 
-mcc <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
-
-# Imprimiendo los valores
-acuracia
-sensibilidade
-especificidade
-VPP
-VPN
-gmedia
-f1
-mcc
-
-################################### SMOTE + ESTANDARIZACIÓN #############################################
-
-library(mlbench) # es la biblioteca donde se encuentra la base de datos
-library(ggplot2) # para crear el gráfico de medio violín y otros según sea necesario
-library(gghalves) # para crear el gráfico de medio violín 
-
-# Accediendo a la base de datos PimaIndiansDiabetes dentro de la biblioteca cargada
-data(PimaIndiansDiabetes)
-
-# Asignando la base de datos al objeto "dados"
-dados <- PimaIndiansDiabetes
-
-# Verificando si la asignación fue exitosa
-dados
-
-# Observando las primeras observaciones
-head(dados)
-
-# Verificar si hay algún NA en la base
-anyNA(dados)
+# Imprimir resultados
+exactitud; sensibilidad; especificidad; VPP; VPN; gmedia; f1; MCC
 
 
-# devuelve una tabla con la frecuencia absoluta de cada clase
-table(dados$diabetes) 
+################################### SMOTE + PADRONIZACIÓN #############################################
 
-# transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
+library(themis)
+library(recipes)
 
-# Proporción de la variable respuesta en toda la base de datos
-prop.table(table(dados$diabetes))
+# Recipe con normalización + SMOTE (solo sobre el conjunto de entrenamiento)
+rec <- recipe(diabetes ~ ., data = entrenamiento) %>%
+  step_normalize(all_predictors()) %>%
+  step_smote(diabetes)
 
-
-# Paquetes
-library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado, bootstrap, etc.)
-library(recipes)   # preprocesamiento de datos (imputación, estandarización, normalización, creación de variables dummy, etc.)
-library(themis)    # métodos para tratar el desbalanceo (SMOTE, ROSE, ENN, Tomek links, entre otros)
-library(rpart)     # ajuste de árboles de clasificación y regresión
-
-# REALIZAR EL SPLIT ESTRATIFICADO EN LOS DATOS (Hazlo tú mismo con base en lo anterior)
-
-# Para garantizar la reproducibilidad
-set.seed(125)
-
-# USAR prop.table() PARA VERIFICAR LAS PROPORCIONES DE LAS CLASES ANTES DE SMOTE 
-# (Hazlo tú mismo con base en lo anterior)
-
-# USANDO LA BIBLIOTECA RECIPES PARA EL PREPROCESAMIENTO DE DATOS (Diapositivas)
-
-# Receta con estandarizaci\'{o}n + SMOTE (solo en el conjunto de entrenamiento)
-rec <- recipe(diabetes ~ ., data = treino) %>%
-  step_normalize(all_predictors()) %>%   # estandariza todas las variables predictoras
-  step_smote(diabetes) # aplica SMOTE
-
-# Prepara la receta con base en el conjunto de entrenamiento
 rec_prep <- prep(rec)
 
-# Aplica en el conjunto de entrenamiento imputado + estandarizado + balanceado
-treino_smote <- bake(rec_prep, new_data = NULL)
+entrenamiento_smote <- bake(rec_prep, new_data = NULL)
+prueba_norm         <- bake(rec_prep, new_data = prueba)
 
-# AJUSTAR ÁRBOL EN treino_smote (Hazlo tú mismo con base en lo anterior)
+# Ajustar árbol con datos balanceados
+arbol <- rpart(diabetes ~ ., data = entrenamiento_smote, method = "class")
 
-# PREDECIR teste_norm CON EL ÁRBOL AJUSTADO EN treino_smote (Hazlo tú mismo con base en lo anterior)
+# Predicción en el conjunto de prueba
+pred <- predict(arbol, newdata = prueba_norm, type = "class")
 
-# MATRIZ DE CONFUSIÓN + MÉTRICAS DE DESEMPEÑO (Hazlo tú mismo con base en lo anterior)
+# Matriz de confusión
+cm <- table(Predicho = pred, Observado = prueba_norm$diabetes)
+cm
 
-############################# ENN + ESTANDARIZACI\'{O}N ###########################################
+TP <- cm["pos","pos"]
+TN <- cm["neg","neg"]
+FP <- cm["pos","neg"]
+FN <- cm["neg","pos"]
 
-library(mlbench) # es la biblioteca donde se encuentra la base de datos
-library(ggplot2) # para crear el gráfico de medio violín y otros según sea necesario
-library(gghalves) # para crear el gráfico de medio violín 
+exactitud       <- (TP + TN) / sum(cm)
+sensibilidad    <- TP / (TP + FN)
+especificidad   <- TN / (TN + FP)
+VPP             <- TP / (TP + FP)
+VPN             <- TN / (TN + FN)
+gmedia          <- sqrt(sensibilidad * especificidad)
+f1              <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad)
+MCC             <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP)*(TP + FN)*(TN + FP)*(TN + FN))
 
-# Accediendo a la base de datos PimaIndiansDiabetes dentro de la biblioteca cargada
-data(PimaIndiansDiabetes)
+# Resultados
+exactitud; sensibilidad; especificidad; VPP; VPN; gmedia; f1; MCC
 
-# Asignando la base de datos al objeto "dados"
-dados <- PimaIndiansDiabetes
 
-# Verificando si la asignación fue exitosa
-dados
+############################# ENN + PADRONIZACIÓN ###########################################
 
-# Observando las primeras observaciones
-head(dados)
+library(FNN)
+library(tidymodels)
 
-# Verificar si hay algún NA en la base
-anyNA(dados)
-
-# Proporción de la variable respuesta en toda la base de datos
-table(dados$diabetes) 
-# devuelve una tabla con la frecuencia absoluta de cada clase
-
-prop.table(table(dados$diabetes))
-# transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
-
-# Paquetes
-library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado, bootstrap, etc.)
-library(FNN)       # Algoritmos de vecinos más cercanos (usado en KNN, imputación y ENN manual)
-library(tidymodels)  # Conjunto de paquetes para modelado estadístico y aprendizaje automático en R (incluye rsample, recipes, yardstick, etc.)
-library(rpart)       # Ajuste de árboles de clasificación y regresión
-
-# Función ENN
+# Función ENN adaptada
 ENN_manual <- function(data, target, k = 3, majority_class) {
   X <- data[, setdiff(names(data), target)]
   y <- data[[target]]
-  
-  # Índices de los k vecinos (no incluye el propio punto)
   nn <- knnx.index(as.matrix(X), as.matrix(X), k = k + 1)[, -1]
-  
   remove_idx <- sapply(1:nrow(X), function(i) {
     if (y[i] == majority_class) {
       neigh_classes <- y[nn[i, ]]
@@ -247,177 +141,234 @@ ENN_manual <- function(data, target, k = 3, majority_class) {
       return(FALSE)
     }
   })
-  
   return(data[!remove_idx, ])
 }
 
-# REALIZAR EL SPLIT ESTRATIFICADO EN LOS DATOS (Hazlo tú mismo con base en lo anterior)
-
-# Para garantizar la reproducibilidad
 set.seed(125)
 
-# USAR prop.table() PARA VERIFICAR LAS PROPORCIONES DE LAS CLASES ANTES DEL ENN 
-# (Hazlo tú mismo con base en lo anterior)
+split   <- initial_split(datos, prop = 0.7, strata = "diabetes")
+entrenamiento  <- training(split)
+prueba   <- testing(split)
 
-# USANDO LA BIBLIOTECA RECIPES PARA EL PREPROCESAMIENTO DE DATOS (solo estandarización)
-# (Hazlo tú mismo con base en lo anterior)
+rec <- recipe(diabetes ~ ., data = entrenamiento) %>%
+  step_normalize(all_numeric_predictors())
 
-# APLICAR ENN AL CONJUNTO DE ENTRENAMIENTO ESTANDARIZADO (Diapositiva)
+rec_prep <- prep(rec)
+entrenamiento_norm <- bake(rec_prep, new_data = entrenamiento)
+prueba_norm  <- bake(rec_prep, new_data = prueba)
 
-# AJUSTAR ÁRBOL EN treino_ENN (Hazlo tú mismo con base en lo anterior)
+entrenamiento_ENN <- ENN_manual(entrenamiento_norm, target = "diabetes", k = 3, majority_class = "neg")
 
-# PREDECIR teste_norm CON EL ÁRBOL AJUSTADO EN treino_ENN (Hazlo tú mismo con base en lo anterior)
+arbol <- rpart(diabetes ~ ., data = entrenamiento_ENN, method = "class")
+pred <- predict(arbol, newdata = prueba_norm, type = "class")
 
-# MATRIZ DE CONFUSIÓN + MÉTRICAS DE DESEMPEÑO (Hazlo tú mismo con base en lo anterior)
+cm <- table(Predicho = pred, Observado = prueba_norm$diabetes)
+cm
+
+TP <- cm["pos","pos"]
+TN <- cm["neg","neg"]
+FP <- cm["pos","neg"]
+FN <- cm["neg","pos"]
+
+exactitud       <- (TP + TN) / sum(cm)
+sensibilidad    <- TP / (TP + FN)
+especificidad   <- TN / (TN + FP)
+VPP             <- TP / (TP + FP)
+VPN             <- TN / (TN + FN)
+gmedia          <- sqrt(sensibilidad * especificidad)
+f1              <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad)
+MCC             <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP)*(TP + FN)*(TN + FP)*(TN + FN))
+
+exactitud; sensibilidad; especificidad; VPP; VPN; gmedia; f1; MCC
 
 
-####################### DESBALANCEADO + ESTANDARIZACI\'{O}N + IMPUTACI\'{O}N ######################################
+######################## SMOTE + ENN + PADRONIZACIÓN ##################################
 
-library(mlbench) # es la biblioteca donde se encuentra la base de datos
-library(ggplot2) # para crear el gráfico de medio violín y otros según sea necesario
-library(gghalves) # para crear el gráfico de medio violín 
+library(themis)
 
-# Accediendo a la base de datos PimaIndiansDiabetes dentro de la biblioteca cargada
+split   <- initial_split(datos, prop = 0.7, strata = "diabetes")
+entrenamiento  <- training(split)
+prueba   <- testing(split)
+
+rec <- recipe(diabetes ~ ., data = entrenamiento) %>%
+  step_normalize(all_numeric_predictors())
+
+rec_prep <- prep(rec)
+entrenamiento_proc <- bake(rec_prep, new_data = NULL)
+prueba_proc  <- bake(rec_prep, new_data = prueba)
+
+entrenamiento_ENN <- ENN_manual(entrenamiento_proc, target = "diabetes", k = 3, majority_class = "neg")
+
+rec_smote <- recipe(diabetes ~ ., data = entrenamiento_ENN) %>%
+  step_smote(diabetes)
+
+rec_smote_prep <- prep(rec_smote)
+entrenamiento_final <- bake(rec_smote_prep, new_data = NULL)
+
+arbol <- rpart(diabetes ~ ., data = entrenamiento_final, method = "class")
+pred <- predict(arbol, newdata = prueba_proc, type = "class")
+
+cm <- table(Predicho = pred, Observado = prueba_proc$diabetes)
+cm
+
+TP <- cm["pos","pos"]
+TN <- cm["neg","neg"]
+FP <- cm["pos","neg"]
+FN <- cm["neg","pos"]
+
+exactitud       <- (TP + TN) / sum(cm)
+sensibilidad    <- TP / (TP + FN)
+especificidad   <- TN / (TN + FP)
+VPP             <- TP / (TP + FP)
+VPN             <- TN / (TN + FN)
+gmedia          <- sqrt(sensibilidad * especificidad)
+f1              <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad)
+MCC             <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP)*(TP + FN)*(TN + FP)*(TN + FN))
+
+exactitud; sensibilidad; especificidad; VPP; VPN; gmedia; f1; MCC
+
+####################### DESBALANCEADO + PADRONIZACIÓN + IMPUTACIÓN ######################################
+
+library(mlbench)
+library(tidymodels)
+library(rpart)
+
+# Cargar la base de datos
 data(PimaIndiansDiabetes)
+datos <- PimaIndiansDiabetes
 
-# Asignando la base de datos al objeto "dados"
-dados <- PimaIndiansDiabetes
+# Reemplazar ceros por NA en variables que no pueden ser cero
+datos$glucose[datos$glucose == 0] <- NA
+datos$pressure[datos$pressure == 0] <- NA
+datos$triceps[datos$triceps == 0] <- NA
+datos$insulin[datos$insulin == 0] <- NA
+datos$mass[datos$mass == 0] <- NA
 
-# Verificando si la asignación fue exitosa
-dados
-
-# Observando las primeras observaciones
-head(dados)
-
-# Verificar si hay algún NA en la base
-anyNA(dados)
-
-# Proporción de la variable respuesta en toda la base de datos
-table(dados$diabetes) 
-# devuelve una tabla con la frecuencia absoluta de cada clase
-
-prop.table(table(dados$diabetes))
-# transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
-
-# REEMPLAZANDO DATOS INCONSISTENTES POR NAs (Diapositivas)
-
-# Paquetes
-library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado, bootstrap, etc.)
-library(tidymodels)  # Conjunto de paquetes para modelado estadístico y aprendizaje automático en R (incluye rsample, recipes, yardstick, etc.)
-library(rpart)       # Ajuste de árboles de clasificación y regresión
-
-# REALIZAR EL SPLIT ESTRATIFICADO EN LOS DATOS (Hazlo tú mismo con base en lo anterior)
-
-# Para garantizar la reproducibilidad
+# División estratificada
 set.seed(125)
+split <- initial_split(datos, prop = 0.7, strata = "diabetes")
+entrenamiento <- training(split)
+prueba <- testing(split)
 
-# USAR prop.table() PARA VERIFICAR LAS PROPORCIONES DE LAS CLASES 
-# (Hazlo tú mismo con base en lo anterior)
+# Recipe con imputación KNN + normalización
+rec <- recipe(diabetes ~ ., data = entrenamiento) %>%
+  step_normalize(all_numeric_predictors()) %>%
+  step_impute_knn(all_numeric_predictors(), neighbors = 5)
 
-# USANDO LA BIBLIOTECA RECIPES PARA EL PREPROCESAMIENTO DE DATOS - IMPUTACIÓN (Diapositivas)
+rec_prep <- prep(rec)
 
-# AJUSTAR ÁRBOL EN treino_imp (Hazlo tú mismo con base en lo anterior)
+entrenamiento_imp <- bake(rec_prep, new_data = NULL)
+prueba_imp <- bake(rec_prep, new_data = prueba)
 
-# PREDECIR teste_imp CON EL ÁRBOL AJUSTADO EN treino_imp (Hazlo tú mismo con base en lo anterior)
+# Ajustar árbol de decisión
+arbol <- rpart(diabetes ~ ., data = entrenamiento_imp, method = "class")
 
-# MATRIZ DE CONFUSIÓN + MÉTRICAS DE DESEMPEÑO (Hazlo tú mismo con base en lo anterior)
+# Predicción en el conjunto de prueba imputado
+pred <- predict(arbol, newdata = prueba_imp, type = "class")
+
+# Matriz de confusión
+cm <- table(Predicho = pred, Observado = prueba_imp$diabetes)
+cm
+
+TP <- cm["pos", "pos"]
+TN <- cm["neg", "neg"]
+FP <- cm["pos", "neg"]
+FN <- cm["neg", "pos"]
+
+exactitud <- (TP + TN) / sum(cm)
+sensibilidad <- TP / (TP + FN)
+especificidad <- TN / (TN + FP)
+VPP <- TP / (TP + FP)
+VPN <- TN / (TN + FN)
+gmedia <- sqrt(sensibilidad * especificidad)
+f1 <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad)
+MCC <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
+
+# Resultados
+exactitud; sensibilidad; especificidad; VPP; VPN; gmedia; f1; MCC
 
 
-######################## SMOTE + ESTANDARIZACI\'{O}N + IMPUTACI\'{O}N ###################################
+######################## SMOTE + PADRONIZACIÓN + IMPUTACIÓN ###################################
 
-library(mlbench) # es la biblioteca donde se encuentra la base de datos
-library(ggplot2) # para crear el gráfico de medio violín y otros según sea necesario
-library(gghalves) # para crear el gráfico de medio violín 
+library(themis)
+library(tidymodels)
+library(rpart)
 
-# Accediendo a la base de datos PimaIndiansDiabetes dentro de la biblioteca cargada
 data(PimaIndiansDiabetes)
+datos <- PimaIndiansDiabetes
 
-# Asignando la base de datos al objeto "dados"
-dados <- PimaIndiansDiabetes
+# Reemplazar ceros por NA
+datos$glucose[datos$glucose == 0] <- NA
+datos$pressure[datos$pressure == 0] <- NA
+datos$triceps[datos$triceps == 0] <- NA
+datos$insulin[datos$insulin == 0] <- NA
+datos$mass[datos$mass == 0] <- NA
 
-# Verificando si la asignación fue exitosa
-dados
-
-# Observando las primeras observaciones
-head(dados)
-
-# Verificar si hay algún NA en la base
-anyNA(dados)
-
-# Proporción de la variable respuesta en toda la base de datos
-table(dados$diabetes) 
-# devuelve una tabla con la frecuencia absoluta de cada clase
-
-prop.table(table(dados$diabetes))
-# transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
-
-# REEMPLAZANDO DATOS INCONSISTENTES POR NAs (Hazlo tú mismo con base en lo anterior)
-
-# Paquetes
-library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado, bootstrap, etc.)
-library(recipes)   # preprocesamiento de datos (imputación, estandarización, normalización, creación de variables dummy, etc.)
-library(themis)    # métodos para tratar el desbalanceo (SMOTE, ROSE, ENN, Tomek links, entre otros)
-library(rpart)     # ajuste de árboles de clasificación y regresión
-
-# REALIZAR EL SPLIT ESTRATIFICADO EN LOS DATOS (Hazlo tú mismo con base en lo anterior)
-
-# Para garantizar la reproducibilidad
+# División estratificada
 set.seed(125)
+split <- initial_split(datos, prop = 0.7, strata = "diabetes")
+entrenamiento <- training(split)
+prueba <- testing(split)
 
-# USAR prop.table() PARA VERIFICAR LAS PROPORCIONES DE LAS CLASES ANTES DE SMOTE
-# (Hazlo tú mismo con base en lo anterior)
+# Recipe con imputación KNN + normalización + SMOTE
+rec <- recipe(diabetes ~ ., data = entrenamiento) %>%
+  step_normalize(all_numeric_predictors()) %>%
+  step_impute_knn(all_numeric_predictors(), neighbors = 5) %>%
+  step_smote(diabetes)
 
-# USANDO LA BIBLIOTECA RECIPES PARA EL PREPROCESAMIENTO DE DATOS - ESTANDARIZACIÓN + IMPUTACIÓN (Diapositivas)
+rec_prep <- prep(rec)
+entrenamiento_smote <- bake(rec_prep, new_data = NULL)
+prueba_proc <- bake(rec_prep, new_data = prueba)
 
-# AJUSTAR ÁRBOL EN treino_knn_norm_smote (Hazlo tú mismo con base en lo anterior)
+# Ajustar árbol
+arbol <- rpart(diabetes ~ ., data = entrenamiento_smote, method = "class")
 
-# PREDECIR teste_knn_norm CON EL ÁRBOL AJUSTADO EN treino_knn_norm_smote (Hazlo tú mismo con base en lo anterior)
+# Predicción
+pred <- predict(arbol, newdata = prueba_proc, type = "class")
 
-# MATRIZ DE CONFUSIÓN + MÉTRICAS DE DESEMPEÑO (Hazlo tú mismo con base en lo anterior)
+# Matriz de confusión
+cm <- table(Predicho = pred, Observado = prueba_proc$diabetes)
+cm
+
+TP <- cm["pos", "pos"]
+TN <- cm["neg", "neg"]
+FP <- cm["pos", "neg"]
+FN <- cm["neg", "pos"]
+
+exactitud <- (TP + TN) / sum(cm)
+sensibilidad <- TP / (TP + FN)
+especificidad <- TN / (TN + FP)
+VPP <- TP / (TP + FP)
+VPN <- TN / (TN + FN)
+gmedia <- sqrt(sensibilidad * especificidad)
+f1 <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad)
+MCC <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
+
+# Resultados
+exactitud; sensibilidad; especificidad; VPP; VPN; gmedia; f1; MCC
 
 
-######################## ENN + ESTANDARIZACI\'{O}N + IMPUTACI\'{O}N ###################################
+######################## ENN + PADRONIZACIÓN + IMPUTACIÓN ###################################
 
-library(mlbench) # es la biblioteca donde se encuentra la base de datos
-library(ggplot2) # para crear el gráfico de medio violín y otros según sea necesario
-library(gghalves) # para crear el gráfico de medio violín 
+library(FNN)
+library(tidymodels)
+library(rpart)
 
-# Accediendo a la base de datos PimaIndiansDiabetes dentro de la biblioteca cargada
 data(PimaIndiansDiabetes)
+datos <- PimaIndiansDiabetes
 
-# Asignando la base de datos al objeto "dados"
-dados <- PimaIndiansDiabetes
-
-# Verificando si la asignación fue exitosa
-dados
-
-# Observando las primeras observaciones
-head(dados)
-
-# Verificar si hay algún NA en la base
-anyNA(dados)
-
-# Proporción de la variable respuesta en toda la base de datos
-table(dados$diabetes) 
-# devuelve una tabla con la frecuencia absoluta de cada clase
-
-prop.table(table(dados$diabetes))
-# transforma la tabla de frecuencia absoluta en una tabla de frecuencia relativa
-
-# Paquetes
-library(rsample)   # funciones para dividir los datos en entrenamiento/prueba (split estratificado, bootstrap, etc.)
-library(FNN)         # Algoritmos de vecinos más cercanos (usado en KNN, imputación y ENN manual)
-library(tidymodels)  # Conjunto de paquetes para modelado estadístico y aprendizaje automático en R (incluye rsample, recipes, yardstick, etc.)
-library(rpart)       # Ajuste de árboles de clasificación y regresión
+# Reemplazar ceros por NA
+datos$glucose[datos$glucose == 0] <- NA
+datos$pressure[datos$pressure == 0] <- NA
+datos$triceps[datos$triceps == 0] <- NA
+datos$insulin[datos$insulin == 0] <- NA
+datos$mass[datos$mass == 0] <- NA
 
 # Función ENN
 ENN_manual <- function(data, target, k = 3, majority_class) {
   X <- data[, setdiff(names(data), target)]
   y <- data[[target]]
-  
-  # Índices de los k vecinos (no incluye el propio punto)
   nn <- knnx.index(as.matrix(X), as.matrix(X), k = k + 1)[, -1]
-  
   remove_idx <- sapply(1:nrow(X), function(i) {
     if (y[i] == majority_class) {
       neigh_classes <- y[nn[i, ]]
@@ -427,25 +378,117 @@ ENN_manual <- function(data, target, k = 3, majority_class) {
       return(FALSE)
     }
   })
-  
   return(data[!remove_idx, ])
 }
 
-# REALIZAR EL SPLIT ESTRATIFICADO EN LOS DATOS (Hazlo tú mismo con base en lo anterior)
-
-# Para garantizar la reproducibilidad
 set.seed(125)
+split <- initial_split(datos, prop = 0.7, strata = "diabetes")
+entrenamiento <- training(split)
+prueba <- testing(split)
 
-# USAR prop.table() PARA VERIFICAR LAS PROPORCIONES DE LAS CLASES ANTES DEL ENN 
-# (Hazlo tú mismo con base en lo anterior)
+rec <- recipe(diabetes ~ ., data = entrenamiento) %>%
+  step_normalize(all_numeric_predictors()) %>%
+  step_impute_knn(all_numeric_predictors(), neighbors = 5)
 
-# USANDO LA BIBLIOTECA RECIPES PARA EL PREPROCESAMIENTO DE DATOS - ESTANDARIZACIÓN E IMPUTACIÓN
-# (Hazlo tú mismo con base en lo anterior)
+rec_prep <- prep(rec)
+entrenamiento_proc <- bake(rec_prep, new_data = NULL)
+prueba_proc <- bake(rec_prep, new_data = prueba)
 
-# APLICAR ENN EN treino_imp_norm
+entrenamiento_ENN <- ENN_manual(entrenamiento_proc, target = "diabetes", k = 3, majority_class = "neg")
 
-# AJUSTAR ÁRBOL EN treino_ENN (Hazlo tú mismo con base en lo anterior)
+# Ajustar árbol
+arbol <- rpart(diabetes ~ ., data = entrenamiento_ENN, method = "class")
 
-# PREDECIR teste_imp_norm CON EL ÁRBOL AJUSTADO EN treino_ENN (Hazlo tú mismo con base en lo anterior)
+# Predicción
+pred <- predict(arbol, newdata = prueba_proc, type = "class")
 
-# MATRIZ DE CONFUSIÓN + MÉTRICAS DE DESEMPEÑO (Hazlo tú mismo con base en lo anterior)
+# Matriz de confusión
+cm <- table(Predicho = pred, Observado = prueba_proc$diabetes)
+cm
+
+TP <- cm["pos", "pos"]
+TN <- cm["neg", "neg"]
+FP <- cm["pos", "neg"]
+FN <- cm["neg", "pos"]
+
+exactitud <- (TP + TN) / sum(cm)
+sensibilidad <- TP / (TP + FN)
+especificidad <- TN / (TN + FP)
+VPP <- TP / (TP + FP)
+VPN <- TN / (TN + FN)
+gmedia <- sqrt(sensibilidad * especificidad)
+f1 <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad)
+MCC <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
+
+# Resultados
+exactitud; sensibilidad; especificidad; VPP; VPN; gmedia; f1; MCC
+
+
+######################## SMOTE + ENN + PADRONIZACIÓN + IMPUTACIÓN #############################
+
+library(themis)
+library(FNN)
+library(tidymodels)
+library(rpart)
+
+data(PimaIndiansDiabetes)
+datos <- PimaIndiansDiabetes
+
+# Reemplazar ceros por NA
+datos$glucose[datos$glucose == 0] <- NA
+datos$pressure[datos$pressure == 0] <- NA
+datos$triceps[datos$triceps == 0] <- NA
+datos$insulin[datos$insulin == 0] <- NA
+datos$mass[datos$mass == 0] <- NA
+
+# División estratificada
+set.seed(125)
+split <- initial_split(datos, prop = 0.7, strata = "diabetes")
+entrenamiento <- training(split)
+prueba <- testing(split)
+
+# Recipe: imputación + normalización
+rec <- recipe(diabetes ~ ., data = entrenamiento) %>%
+  step_normalize(all_numeric_predictors()) %>%
+  step_impute_knn(all_numeric_predictors(), neighbors = 5)
+
+rec_prep <- prep(rec)
+entrenamiento_proc <- bake(rec_prep, new_data = NULL)
+prueba_proc <- bake(rec_prep, new_data = prueba)
+
+# ENN manual
+entrenamiento_ENN <- ENN_manual(entrenamiento_proc, target = "diabetes", k = 3, majority_class = "neg")
+
+# SMOTE posterior
+rec_smote <- recipe(diabetes ~ ., data = entrenamiento_ENN) %>%
+  step_smote(diabetes)
+
+rec_smote_prep <- prep(rec_smote)
+entrenamiento_final <- bake(rec_smote_prep, new_data = NULL)
+
+# Ajustar árbol
+arbol <- rpart(diabetes ~ ., data = entrenamiento_final, method = "class")
+
+# Predicción
+pred <- predict(arbol, newdata = prueba_proc, type = "class")
+
+# Matriz de confusión
+cm <- table(Predicho = pred, Observado = prueba_proc$diabetes)
+cm
+
+TP <- cm["pos", "pos"]
+TN <- cm["neg", "neg"]
+FP <- cm["pos", "neg"]
+FN <- cm["neg", "pos"]
+
+exactitud <- (TP + TN) / sum(cm)
+sensibilidad <- TP / (TP + FN)
+especificidad <- TN / (TN + FP)
+VPP <- TP / (TP + FP)
+VPN <- TN / (TN + FN)
+gmedia <- sqrt(sensibilidad * especificidad)
+f1 <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad)
+MCC <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
+
+# Resultados finales
+exactitud; sensibilidad; especificidad; VPP; VPN; gmedia; f1; MCC

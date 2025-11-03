@@ -20,14 +20,10 @@ library(infotheo)
 library(e1071)
 library(dplyr)
 library(rsample)
-library(readr)
 
 ############################################################
 ## 1) Cargar los datos
 ############################################################
-dados<-read.csv("DadosDB.csv")
-cols_cat<-names(dados)[names(dados)!="inadimplemente"]
-dados[cols_cat]<-lapply(dados[cols_cat],factor)
 
 # IMPORTE LA BASE DE DATOS EN R. PUEDE USAR GOOGLE SI NO RECUERDA CÓMO IMPORTAR
 # UNA BASE DE DATOS DESDE LA COMPUTADORA AL RSTUDIO.
@@ -41,21 +37,21 @@ dados[cols_cat]<-lapply(dados[cols_cat],factor)
 set.seed(2026) #para mantener la reproducibilidad
 
 split_obj <- initial_split(dados,
-                           prop  =0.7 ,             # X% para entrenamiento
-                           strata = "inadimplente")  # estratifica en la variable respuesta
+                           prop  = ,             # X% para entrenamiento
+                           strata = "")  # estratifica en la variable respuesta
 
-treino <- training(split_obj)
-teste  <- testing(split_obj)
+treino <- training()
+teste  <- testing()
 
 # verificar proporciones
 
-table(dados$inadimplente) #tabla de frecuencia absoluta de incumplidores en la base original
-table(treino$inadimplente) #tabla de frecuencia absoluta de incumplidores en la base de entrenamiento
-table(teste$inadimplente) #tabla de frecuencia absoluta de incumplidores en la base de prueba
+table() #tabla de frecuencia absoluta de incumplidores en la base original
+table() #tabla de frecuencia absoluta de incumplidores en la base de entrenamiento
+table() #tabla de frecuencia absoluta de incumplidores en la base de prueba
 
-prop.table(table(dados$inadimplente)) #tabla de frecuencia relativa de incumplidores en la base original
-prop.table(table(treino$inadimplente)) #tabla de frecuencia relativa de incumplidores en la base de entrenamiento
-prop.table(table(teste$inadimplente)) #tabla de frecuencia relativa de incumplidores en la base de prueba
+prop.table() #tabla de frecuencia relativa de incumplidores en la base original
+prop.table() #tabla de frecuencia relativa de incumplidores en la base de entrenamiento
+prop.table() #tabla de frecuencia relativa de incumplidores en la base de prueba
 
 ############################################################
 ## 3) Aplicar mRMR
@@ -105,46 +101,28 @@ vars_selecionadas
 
 ## 4.1) Modelo con TODAS las variables
 modelo_todas <- glm(inadimplente ~ ., 
-                    data =treino, # datos donde se va a ajustar
-                    family =binomial()) # ¿DE QUÉ TIPO ES ESTE GLM?
-
-# probabilidad predicha para el conjunto de prueba
-prob_todas <- predict(modelo_todas, # modelo ajustado que vamos a usar para predecir
-                      newdata = teste, # qué conjunto de datos vamos a predecir
-                      type = "response")
-
-# clase predicha (¿QUÉ PUNTO DE CORTE?)
-pred_todas <- ifelse(prob_todas >=0.71, 1, 0)
-
-
-## 4.2) Modelo SOLO con las variables seleccionadas por mRMR
-
-modelo_mrmr <- glm(, # COLOCAR LA FÓRMULA
-                   data = , # datos donde se va a ajustar
-                   family =binomial()) # ¿DE QUÉ TIPO ES ESTE GLM?
+                    data = , # datos donde se va a ajustar
+                    family =) # ¿DE QUÉ TIPO ES ESTE GLM?
 
 # probabilidad predicha para el conjunto de prueba
 prob_todas <- predict(, # modelo ajustado que vamos a usar para predecir
                       newdata = , # qué conjunto de datos vamos a predecir
                       type = "response")
 
-
-TP <- cm["pos","pos"]
-TN <- cm["neg","neg"]
-FP <- cm["pos","neg"]
-FN <- cm["neg","pos"]
-
-exactitud       <- (TP + TN) / sum(cm)
-sensibilidad    <- TP / (TP + FN)
-especificidad   <- TN / (TN + FP)
-VPP             <- TP / (TP + FP)   # Valor predictivo positivo (precisión)
-VPN             <- TN / (TN + FN)   # Valor predictivo negativo
-gmedia          <- sqrt(sensibilidad * especificidad) # media geométrica
-f1              <- 2 * (VPP * sensibilidad) / (VPP + sensibilidad) # media armónica
-MCC             <- ((TP * TN) - (FP * FN)) / sqrt((TP + FP)*(TP + FN)*(TN + FP)*(TN + FN)) # coeficiente de Matthews
+# clase predicha (¿QUÉ PUNTO DE CORTE?)
+pred_todas <- ifelse(prob_todas >= , 1, 0)
 
 
+## 4.2) Modelo SOLO con las variables seleccionadas por mRMR
 
+modelo_mrmr <- glm(, # COLOCAR LA FÓRMULA
+                   data = , # datos donde se va a ajustar
+                   family =) # ¿DE QUÉ TIPO ES ESTE GLM?
+
+# probabilidad predicha para el conjunto de prueba
+prob_todas <- predict(, # modelo ajustado que vamos a usar para predecir
+                      newdata = , # qué conjunto de datos vamos a predecir
+                      type = "response")
 
 # clase predicha (¿QUÉ PUNTO DE CORTE?)
 pred_todas <- ifelse(prob_todas >= , 1, 0)
@@ -202,19 +180,99 @@ cat("\n== Métricas - Modelo con mRMR ==\n")
 print(met_mrmr)
 
 ############################################################
-## 4) Modelos: todas las variables vs mRMR
-##    (usando kNN con ESTANDARIZACIÓN)
+## 4) Modelos: todas as variáveis vs mRMR
+##    (usando kNN com dummies via model.matrix)
 ############################################################
 
-#HÁGALO USTED MISMO
-#SI NUNCA AJUSTÓ UN KNN EN R, HAGA UNA BÚSQUEDA EN INTERNET Y ESTUDIE AL RESPECTO
+library(class)
 
-############################################################
-## 5) Comparación con otro método de selección de variables
-############################################################
+## 4.1) kNN com TODAS as variáveis
 
-#HÁGALO USTED MISMO
-#SI NUNCA AJUSTÓ UN STEPWISE O LASSO EN R, HAGA UNA BÚSQUEDA EN INTERNET Y ESTUDIE AL RESPECTO
+# model.matrix cria automaticamente as dummies para TODOS os fatores
+X_train_all <- model.matrix(inadimplente ~ . - 1, data = treino)
+X_test_all  <- model.matrix(inadimplente ~ . - 1, data = teste)
+
+y_train <- as.factor(treino$inadimplente)
+y_test  <- teste$inadimplente  # numérico 0/1
+
+# escolher k
+k_val <- # ¿CÓMO PODEMOS ELEGIR K? ¿EXISTE UN K IDEAL?
+  
+  #COMPLETA 
+  pred_todas_knn_fac <- knn(train = ,
+                            test  = ,
+                            cl    = ,
+                            k     = )
+
+pred_todas_knn <- as.numeric(as.character(pred_todas_knn_fac))
+
+## 4.2) kNN APENAS com variáveis selecionadas pelo mRMR
+
+# COMPLETA CON BASE EN 4.1
+
+X_train_mrmr <- model.matrix(FORMULA, data = )
+X_test_mrmr  <- model.matrix(FORMULA,  data = )
+
+pred_mrmr_knn_fac <- knn(train = ,
+                         test  = ,
+                         cl    = ,
+                         k     = )
+
+pred_mrmr_knn <- as.numeric(as.character(pred_mrmr_knn_fac))
+
+## 4.3) Métricas para escenario desbalanceado
+
+# función auxiliar: recibe vectores de 0/1
+calc_metrics <- function(y_true, y_pred) {
+  # matriz 2x2
+  tab <- table(Pred = y_pred, Real = y_true)
+  
+  # garantizar que tiene todas las entradas
+  TP <- ifelse("1" %in% rownames(tab) & "1" %in% colnames(tab), tab["1","1"], 0)
+  TN <- ifelse("0" %in% rownames(tab) & "0" %in% colnames(tab), tab["0","0"], 0)
+  FP <- ifelse("1" %in% rownames(tab) & "0" %in% colnames(tab), tab["1","0"], 0)
+  FN <- ifelse("0" %in% rownames(tab) & "1" %in% colnames(tab), tab["0","1"], 0)
+  
+  
+  #ATENCIÓN: AQUÍ DEBE CAMBIAR LA PALABRA "FÓRMULA" EN EL CÓDIGO POR LA FÓRMULA DE LA MEDIDA
+  
+  # métricas
+  acc  <- ifelse((TP + TN + FP + FN) > 0, FÓRMULA, NA)
+  sens <- ifelse((TP + FN) > 0, FÓRMULA, NA)  # recall
+  esp  <- ifelse((TN + FP) > 0, FÓRMULA, NA)
+  ppv  <- ifelse((TP + FP) > 0, FÓRMULA, NA)  # precision
+  npv  <- ifelse((TN + FN) > 0, FÓRMULA, NA)
+  gmean <- ifelse(!is.na(sens) & !is.na(esp), FÓRMULA, NA)
+  f1    <- ifelse((ppv + sens) > 0, FÓRMULA, NA)
+  
+  # MCC
+  denom <- sqrt( (TP + FP) * (TP + FN) * (TN + FP) * (TN + FN) )
+  mcc <- ifelse(denom > 0, (TP*TN - FP*FN) / denom, NA)
+  
+  data.frame(
+    Acuracia = acc,
+    Sensibilidade = sens,
+    Especificidade = esp,
+    PPV = ppv,
+    NPV = npv,
+    Gmedia = gmean,
+    F1 = f1,
+    MCC = mcc
+  )
+}
+
+#COMPLETE
+
+met_todas_knn <- calc_metrics(, )
+met_mrmr_knn  <- calc_metrics(, )
+
+
+cat("\n== Métricas - kNN com TODAS ==\n")
+print(met_todas_knn)
+
+cat("\n== Métricas - kNN com mRMR ==\n")
+print(met_mrmr_knn)
+
 ############################################################
 ## 5) Comparar mRMR x forward stepwise (AIC)
 ############################################################
@@ -270,8 +328,3 @@ print(met_todas_knn)
 
 cat("\n== Métricas - kNN com mRMR ==\n")
 print(met_mrmr_knn)
-
-
-
-
-
