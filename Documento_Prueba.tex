@@ -1,0 +1,997 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  11pt,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Lista 02 -- Métodos de Preprocesamiento de Datos},
+  pdfauthor={Víctor Mauricio Ochoa García, Salvador Enrique Rodríguez Hernández},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Lista 02 -- Métodos de Preprocesamiento de Datos}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Análisis de datos y estrategias de balanceo}
+\author{Víctor Mauricio Ochoa García, Salvador Enrique Rodríguez
+Hernández}
+\date{06 de noviembre de 2025}
+
+\begin{document}
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\SpecialCharTok{::}\NormalTok{opts\_chunk}\SpecialCharTok{$}\FunctionTok{set}\NormalTok{(}
+\AttributeTok{echo =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{message =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{warning =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{fig.width =} \DecValTok{7}\NormalTok{, }\AttributeTok{fig.height =} \DecValTok{5}
+\NormalTok{)}
+
+\FunctionTok{suppressPackageStartupMessages}\NormalTok{(\{}
+\FunctionTok{library}\NormalTok{(readr)}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(rsample)}
+\FunctionTok{library}\NormalTok{(recipes)}
+\FunctionTok{library}\NormalTok{(themis)   }\CommentTok{\# SMOTE}
+\FunctionTok{library}\NormalTok{(FNN)      }\CommentTok{\# knn/ENN}
+\FunctionTok{library}\NormalTok{(knitr)}
+\FunctionTok{library}\NormalTok{(tibble)}
+\NormalTok{\})}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{2026}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Datos y utilidades}\label{datos-y-utilidades}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Dataset UCI (trata "?" como NA)}
+
+\NormalTok{url }\OtherTok{\textless{}{-}} \StringTok{"https://archive.ics.uci.edu/ml/machine{-}learning{-}databases/00383/risk\_factors\_cervical\_cancer.csv"}
+\NormalTok{cc    }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(url, }\AttributeTok{na =} \StringTok{"?"}\NormalTok{)}
+\NormalTok{datos }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(cc)}
+
+\NormalTok{target\_var }\OtherTok{\textless{}{-}} \StringTok{"Biopsy"}
+\FunctionTok{stopifnot}\NormalTok{(target\_var }\SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(datos))}
+
+\CommentTok{\# Asegurar factor binario "0"/"1"}
+
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ datos[[target\_var]]}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.factor}\NormalTok{(y)) y }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(y))}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{all}\NormalTok{(}\FunctionTok{levels}\NormalTok{(y) }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"0"}\NormalTok{,}\StringTok{"1"}\NormalTok{))) \{}
+\NormalTok{y }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(y), }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"0"}\NormalTok{,}\StringTok{"1"}\NormalTok{))}
+\NormalTok{\}}
+\NormalTok{datos[[target\_var]] }\OtherTok{\textless{}{-}}\NormalTok{ y}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Métricas (idénticas al estilo de clase)}
+
+\NormalTok{calc\_metrics }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(y\_true, y\_pred) \{}
+\NormalTok{tab }\OtherTok{\textless{}{-}} \FunctionTok{table}\NormalTok{(}\AttributeTok{Pred =}\NormalTok{ y\_pred, }\AttributeTok{Real =}\NormalTok{ y\_true)}
+\NormalTok{TP }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\StringTok{"1"} \SpecialCharTok{\%in\%} \FunctionTok{rownames}\NormalTok{(tab) }\SpecialCharTok{\&} \StringTok{"1"} \SpecialCharTok{\%in\%} \FunctionTok{colnames}\NormalTok{(tab), tab[}\StringTok{"1"}\NormalTok{,}\StringTok{"1"}\NormalTok{], }\DecValTok{0}\NormalTok{)}
+\NormalTok{TN }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\StringTok{"0"} \SpecialCharTok{\%in\%} \FunctionTok{rownames}\NormalTok{(tab) }\SpecialCharTok{\&} \StringTok{"0"} \SpecialCharTok{\%in\%} \FunctionTok{colnames}\NormalTok{(tab), tab[}\StringTok{"0"}\NormalTok{,}\StringTok{"0"}\NormalTok{], }\DecValTok{0}\NormalTok{)}
+\NormalTok{FP }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\StringTok{"1"} \SpecialCharTok{\%in\%} \FunctionTok{rownames}\NormalTok{(tab) }\SpecialCharTok{\&} \StringTok{"0"} \SpecialCharTok{\%in\%} \FunctionTok{colnames}\NormalTok{(tab), tab[}\StringTok{"1"}\NormalTok{,}\StringTok{"0"}\NormalTok{], }\DecValTok{0}\NormalTok{)}
+\NormalTok{FN }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\StringTok{"0"} \SpecialCharTok{\%in\%} \FunctionTok{rownames}\NormalTok{(tab) }\SpecialCharTok{\&} \StringTok{"1"} \SpecialCharTok{\%in\%} \FunctionTok{colnames}\NormalTok{(tab), tab[}\StringTok{"0"}\NormalTok{,}\StringTok{"1"}\NormalTok{], }\DecValTok{0}\NormalTok{)}
+
+\NormalTok{acc   }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{((TP }\SpecialCharTok{+}\NormalTok{ TN }\SpecialCharTok{+}\NormalTok{ FP }\SpecialCharTok{+}\NormalTok{ FN) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, (TP }\SpecialCharTok{+}\NormalTok{ TN)}\SpecialCharTok{/}\NormalTok{(TP }\SpecialCharTok{+}\NormalTok{ TN }\SpecialCharTok{+}\NormalTok{ FP }\SpecialCharTok{+}\NormalTok{ FN), }\ConstantTok{NA}\NormalTok{)}
+\NormalTok{sens  }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{((TP }\SpecialCharTok{+}\NormalTok{ FN) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, TP }\SpecialCharTok{/}\NormalTok{ (TP }\SpecialCharTok{+}\NormalTok{ FN), }\ConstantTok{NA}\NormalTok{)}
+\NormalTok{esp   }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{((TN }\SpecialCharTok{+}\NormalTok{ FP) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, TN }\SpecialCharTok{/}\NormalTok{ (TN }\SpecialCharTok{+}\NormalTok{ FP), }\ConstantTok{NA}\NormalTok{)}
+\NormalTok{ppv   }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{((TP }\SpecialCharTok{+}\NormalTok{ FP) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, TP }\SpecialCharTok{/}\NormalTok{ (TP }\SpecialCharTok{+}\NormalTok{ FP), }\ConstantTok{NA}\NormalTok{)}
+\NormalTok{npv   }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{((TN }\SpecialCharTok{+}\NormalTok{ FN) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, TN }\SpecialCharTok{/}\NormalTok{ (TN }\SpecialCharTok{+}\NormalTok{ FN), }\ConstantTok{NA}\NormalTok{)}
+\NormalTok{gmean }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(sens) }\SpecialCharTok{\&} \SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(esp), }\FunctionTok{sqrt}\NormalTok{(sens }\SpecialCharTok{*}\NormalTok{ esp), }\ConstantTok{NA}\NormalTok{)}
+\NormalTok{f1    }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{((ppv }\SpecialCharTok{+}\NormalTok{ sens) }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\DecValTok{2} \SpecialCharTok{*}\NormalTok{ ppv }\SpecialCharTok{*}\NormalTok{ sens }\SpecialCharTok{/}\NormalTok{ (ppv }\SpecialCharTok{+}\NormalTok{ sens), }\ConstantTok{NA}\NormalTok{)}
+
+\NormalTok{denom }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{( (TP }\SpecialCharTok{+}\NormalTok{ FP) }\SpecialCharTok{*}\NormalTok{ (TP }\SpecialCharTok{+}\NormalTok{ FN) }\SpecialCharTok{*}\NormalTok{ (TN }\SpecialCharTok{+}\NormalTok{ FP) }\SpecialCharTok{*}\NormalTok{ (TN }\SpecialCharTok{+}\NormalTok{ FN) )}
+\NormalTok{mcc   }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(denom }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{, (TP}\SpecialCharTok{*}\NormalTok{TN }\SpecialCharTok{{-}}\NormalTok{ FP}\SpecialCharTok{*}\NormalTok{FN) }\SpecialCharTok{/}\NormalTok{ denom, }\ConstantTok{NA}\NormalTok{)}
+
+\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Accuracy =}\NormalTok{ acc, }\AttributeTok{Sensitivity =}\NormalTok{ sens, }\AttributeTok{Specificity =}\NormalTok{ esp,}
+\AttributeTok{PPV =}\NormalTok{ ppv, }\AttributeTok{NPV =}\NormalTok{ npv, }\AttributeTok{Gmean =}\NormalTok{ gmean, }\AttributeTok{F1 =}\NormalTok{ f1, }\AttributeTok{MCC =}\NormalTok{ mcc)}
+\NormalTok{\}}
+
+\CommentTok{\# ENN manual (edita ejemplos de la clase mayoritaria que discrepan con vecinos)}
+
+\NormalTok{ENN\_manual }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(data, target, }\AttributeTok{k =} \DecValTok{3}\NormalTok{, majority\_class) \{}
+\NormalTok{X }\OtherTok{\textless{}{-}}\NormalTok{ data[, }\FunctionTok{setdiff}\NormalTok{(}\FunctionTok{names}\NormalTok{(data), target), drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{y }\OtherTok{\textless{}{-}}\NormalTok{ data[[target]]}
+\NormalTok{X\_num }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(X, }\ControlFlowTok{function}\NormalTok{(z) }\ControlFlowTok{if}\NormalTok{(}\FunctionTok{is.numeric}\NormalTok{(z)) z }\ControlFlowTok{else} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{as.factor}\NormalTok{(z))))}
+\NormalTok{nn }\OtherTok{\textless{}{-}} \FunctionTok{knnx.index}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{(X\_num), }\FunctionTok{as.matrix}\NormalTok{(X\_num), }\AttributeTok{k =}\NormalTok{ k }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)[, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{remove\_idx }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(X\_num), }\ControlFlowTok{function}\NormalTok{(i) \{}
+\ControlFlowTok{if}\NormalTok{ (y[i] }\SpecialCharTok{==}\NormalTok{ majority\_class) \{}
+\NormalTok{neigh\_classes }\OtherTok{\textless{}{-}}\NormalTok{ y[nn[i, ]]}
+\NormalTok{maj\_class }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(}\FunctionTok{sort}\NormalTok{(}\FunctionTok{table}\NormalTok{(neigh\_classes), }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+\FunctionTok{return}\NormalTok{(maj\_class }\SpecialCharTok{!=}\NormalTok{ y[i])}
+\NormalTok{\} }\ControlFlowTok{else} \ConstantTok{FALSE}
+\NormalTok{\})}
+\NormalTok{data[}\SpecialCharTok{!}\NormalTok{remove\_idx, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{\}}
+
+\CommentTok{\# Helper: ajustar y evaluar regresión logística}
+
+\NormalTok{eval\_logit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(train\_df, test\_df, }\AttributeTok{cutoff =} \FloatTok{0.5}\NormalTok{, }\AttributeTok{target =}\NormalTok{ target\_var) \{}
+\NormalTok{form }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(target, }\StringTok{"\textasciitilde{} ."}\NormalTok{))}
+\NormalTok{mod  }\OtherTok{\textless{}{-}} \FunctionTok{glm}\NormalTok{(form, }\AttributeTok{data =}\NormalTok{ train\_df, }\AttributeTok{family =}\NormalTok{ binomial)}
+\NormalTok{prob }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(mod, }\AttributeTok{newdata =}\NormalTok{ test\_df, }\AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{pred }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(prob }\SpecialCharTok{\textgreater{}=}\NormalTok{ cutoff, }\StringTok{"1"}\NormalTok{, }\StringTok{"0"}\NormalTok{)}
+\NormalTok{pred }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(pred, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"0"}\NormalTok{,}\StringTok{"1"}\NormalTok{))}
+\FunctionTok{list}\NormalTok{(}\AttributeTok{metrics =} \FunctionTok{calc\_metrics}\NormalTok{(test\_df[[target]], pred),}
+\AttributeTok{cutoff =}\NormalTok{ cutoff,}
+\AttributeTok{n\_train =} \FunctionTok{nrow}\NormalTok{(train\_df))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\section{(a) ¿Por qué imputación kNN en todas las predictoras con
+NA?}\label{a-por-quuxe9-imputaciuxf3n-knn-en-todas-las-predictoras-con-na}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{na\_counts }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(datos, }\ControlFlowTok{function}\NormalTok{(v) }\FunctionTok{sum}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(v)))}
+\NormalTok{na\_pct    }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(}\DecValTok{100} \SpecialCharTok{*}\NormalTok{ na\_counts }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(datos), }\DecValTok{2}\NormalTok{)}
+\NormalTok{na\_tbl    }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{var =} \FunctionTok{names}\NormalTok{(na\_counts), }\AttributeTok{NA\_count =}\NormalTok{ na\_counts, }\AttributeTok{NA\_percent =}\NormalTok{ na\_pct) }\SpecialCharTok{|\textgreater{}}
+\FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(NA\_percent))}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{head}\NormalTok{(na\_tbl, }\DecValTok{12}\NormalTok{), }\AttributeTok{caption =} \StringTok{"Top 12 variables con mayor porcentaje de NA"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3889}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3889}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1000}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1222}}@{}}
+\caption{Top 12 variables con mayor porcentaje de NA}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+var
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NA\_count
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NA\_percent
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+var
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NA\_count
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NA\_percent
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+STDs: Time since first diagnosis & STDs: Time since first diagnosis &
+787 & 91.72 \\
+STDs: Time since last diagnosis & STDs: Time since last diagnosis & 787
+& 91.72 \\
+IUD & IUD & 117 & 13.64 \\
+IUD (years) & IUD (years) & 117 & 13.64 \\
+Hormonal Contraceptives & Hormonal Contraceptives & 108 & 12.59 \\
+Hormonal Contraceptives (years) & Hormonal Contraceptives (years) & 108
+& 12.59 \\
+STDs & STDs & 105 & 12.24 \\
+STDs (number) & STDs (number) & 105 & 12.24 \\
+STDs:condylomatosis & STDs:condylomatosis & 105 & 12.24 \\
+STDs:cervical condylomatosis & STDs:cervical condylomatosis & 105 &
+12.24 \\
+STDs:vaginal condylomatosis & STDs:vaginal condylomatosis & 105 &
+12.24 \\
+STDs:vulvo-perineal condylomatosis & STDs:vulvo-perineal condylomatosis
+& 105 & 12.24 \\
+\end{longtable}
+
+Respuesta (a). Varias variables presentan faltantes considerables (dos
+por arriba de 90\% y varias en 10--15\%). Eliminar filas con NA
+reduciría drásticamente el tamaño muestral y sesgaría el análisis. La
+imputación por k-vecinos (kNN) aprovecha la estructura multivariada:
+cada NA se reemplaza usando observaciones similares en el espacio de
+variables, preservando coherencia entre predictores. Por ello se decidió
+imputar con kNN en todas las predictoras con NA (y luego estandarizar).
+
+\section{(b) Proporción de clases de la respuesta (barras con
+porcentajes)}\label{b-proporciuxf3n-de-clases-de-la-respuesta-barras-con-porcentajes}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{g\_base }\OtherTok{\textless{}{-}}\NormalTok{ datos }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{count}\NormalTok{(}\SpecialCharTok{!!}\FunctionTok{sym}\NormalTok{(target\_var)) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{prop =} \DecValTok{100} \SpecialCharTok{*}\NormalTok{ n }\SpecialCharTok{/} \FunctionTok{sum}\NormalTok{(n))}
+\FunctionTok{kable}\NormalTok{(g\_base, }\AttributeTok{caption =} \StringTok{"Frecuencia y porcentaje por clase de Biopsy"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrr@{}}
+\caption{Frecuencia y porcentaje por clase de Biopsy}\tabularnewline
+\toprule\noalign{}
+Biopsy & n & prop \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Biopsy & n & prop \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 803 & 93.589744 \\
+1 & 55 & 6.410256 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(g\_base, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \SpecialCharTok{!!}\FunctionTok{sym}\NormalTok{(target\_var), }\AttributeTok{y =}\NormalTok{ n, }\AttributeTok{fill =} \SpecialCharTok{!!}\FunctionTok{sym}\NormalTok{(target\_var))) }\SpecialCharTok{+}
+\FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{width =} \FloatTok{0.6}\NormalTok{, }\AttributeTok{show.legend =} \ConstantTok{FALSE}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =} \FunctionTok{paste0}\NormalTok{(}\FunctionTok{round}\NormalTok{(prop,}\DecValTok{1}\NormalTok{), }\StringTok{"\%"}\NormalTok{)), }\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{0.3}\NormalTok{, }\AttributeTok{size =} \FloatTok{4.2}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Clase (Biopsy)"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Frecuencia absoluta"}\NormalTok{,}
+\AttributeTok{title =} \StringTok{"Distribución de la respuesta (conteos y porcentajes)"}\NormalTok{) }\SpecialCharTok{+}
+\FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Documento_Prueba_files/figure-latex/unnamed-chunk-5-1.pdf}}
+
+La clase positiva (1) representa r sprintf(`\%.1f\%\%',
+min(g\_base\$prop)) del total: el problema está fuertemente
+desbalanceado.
+
+Preparación común (imputar, normalizar, splits)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Split estratificado 70/30}
+
+\NormalTok{split\_obj }\OtherTok{\textless{}{-}} \FunctionTok{initial\_split}\NormalTok{(datos, }\AttributeTok{prop =} \FloatTok{0.70}\NormalTok{, }\AttributeTok{strata =} \FunctionTok{all\_of}\NormalTok{(target\_var))}
+\NormalTok{treino0 }\OtherTok{\textless{}{-}} \FunctionTok{training}\NormalTok{(split\_obj)}
+\NormalTok{teste0  }\OtherTok{\textless{}{-}} \FunctionTok{testing}\NormalTok{(split\_obj)}
+
+\CommentTok{\# Imputar primero, normalizar después (evita warnings y es el orden correcto)}
+
+\NormalTok{rec\_imp }\OtherTok{\textless{}{-}} \FunctionTok{recipe}\NormalTok{(}\FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(target\_var, }\StringTok{"\textasciitilde{} ."}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ treino0) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{step\_impute\_knn}\NormalTok{(}\FunctionTok{all\_numeric\_predictors}\NormalTok{(), }\AttributeTok{neighbors =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{step\_zv}\NormalTok{(}\FunctionTok{all\_predictors}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}                  \CommentTok{\# quita predictores constantes}
+\FunctionTok{step\_normalize}\NormalTok{(}\FunctionTok{all\_numeric\_predictors}\NormalTok{())}
+
+\NormalTok{imp\_prep   }\OtherTok{\textless{}{-}} \FunctionTok{prep}\NormalTok{(rec\_imp)}
+\NormalTok{treino\_imp }\OtherTok{\textless{}{-}} \FunctionTok{bake}\NormalTok{(imp\_prep, }\AttributeTok{new\_data =} \ConstantTok{NULL}\NormalTok{)}
+\NormalTok{teste\_imp  }\OtherTok{\textless{}{-}} \FunctionTok{bake}\NormalTok{(imp\_prep, }\AttributeTok{new\_data =}\NormalTok{ teste0)}
+
+\NormalTok{minority\_prop }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(g\_base}\SpecialCharTok{$}\NormalTok{prop }\SpecialCharTok{/} \DecValTok{100}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{(c) SMOTE + Regresión logística (corte
+0.5)}\label{c-smote-regresiuxf3n-loguxedstica-corte-0.5}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rec\_smote }\OtherTok{\textless{}{-}} \FunctionTok{recipe}\NormalTok{(}\FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(target\_var, }\StringTok{"\textasciitilde{} ."}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ treino\_imp) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{step\_smote}\NormalTok{(}\FunctionTok{all\_outcomes}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{step\_zv}\NormalTok{(}\FunctionTok{all\_predictors}\NormalTok{())}
+\NormalTok{smote\_prep   }\OtherTok{\textless{}{-}} \FunctionTok{prep}\NormalTok{(rec\_smote)}
+\NormalTok{treino\_smote }\OtherTok{\textless{}{-}} \FunctionTok{bake}\NormalTok{(smote\_prep, }\AttributeTok{new\_data =} \ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{res\_c  }\OtherTok{\textless{}{-}} \FunctionTok{eval\_logit}\NormalTok{(treino\_smote, teste\_imp, }\AttributeTok{cutoff =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{row\_c  }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Modelo =} \StringTok{"SMOTE (cut=0.5)"}\NormalTok{, }\AttributeTok{Ntrain =}\NormalTok{ res\_c}\SpecialCharTok{$}\NormalTok{n\_train, }\AttributeTok{Cutoff =}\NormalTok{ res\_c}\SpecialCharTok{$}\NormalTok{cutoff, res\_c}\SpecialCharTok{$}\NormalTok{metrics)}
+\FunctionTok{kable}\NormalTok{(row\_c, }\AttributeTok{caption =} \StringTok{"Resultados (c): SMOTE + logística (cut=0.5)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1553}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0680}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0680}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0971}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1165}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1165}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0485}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0971}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0971}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0388}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0971}}@{}}
+\caption{Resultados (c): SMOTE + logística (cut=0.5)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+SMOTE (cut=0.5) & 1120 & 0.5 & 0.9534884 & 0.9333333 & 0.9547325 & 0.56
+& 0.9957082 & 0.9439723 & 0.7 & 0.7024994 \\
+\end{longtable}
+
+SMOTE aumenta la presencia de la clase minoritaria en entrenamiento y la
+logística mejora el equilibrio sensibilidad--especificidad.
+
+\section{(d) ENN + Regresión logística (corte = prop.
+minoritaria)}\label{d-enn-regresiuxf3n-loguxedstica-corte-prop.-minoritaria}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{maj\_class  }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(}\FunctionTok{sort}\NormalTok{(}\FunctionTok{table}\NormalTok{(treino\_imp[[target\_var]]), }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{))[}\DecValTok{1}\NormalTok{]}
+\NormalTok{treino\_ENN }\OtherTok{\textless{}{-}} \FunctionTok{ENN\_manual}\NormalTok{(treino\_imp, }\AttributeTok{target =}\NormalTok{ target\_var, }\AttributeTok{k =} \DecValTok{3}\NormalTok{, }\AttributeTok{majority\_class =}\NormalTok{ maj\_class)}
+
+\NormalTok{prop\_ENN }\OtherTok{\textless{}{-}} \FunctionTok{prop.table}\NormalTok{(}\FunctionTok{table}\NormalTok{(treino\_ENN[[target\_var]]))}
+\FunctionTok{kable}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{(prop\_ENN), }\AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Clase"}\NormalTok{, }\StringTok{"Proporción"}\NormalTok{),}
+\AttributeTok{caption =} \StringTok{"Proporciones en entrenamiento después de ENN"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lr@{}}
+\caption{Proporciones en entrenamiento después de ENN}\tabularnewline
+\toprule\noalign{}
+Clase & Proporción \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Clase & Proporción \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 0.9322034 \\
+1 & 0.0677966 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cut\_ENN }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{min}\NormalTok{(}\FunctionTok{prop.table}\NormalTok{(}\FunctionTok{table}\NormalTok{(treino\_imp[[target\_var]]))))}
+\NormalTok{res\_d   }\OtherTok{\textless{}{-}} \FunctionTok{eval\_logit}\NormalTok{(treino\_ENN, teste\_imp, }\AttributeTok{cutoff =}\NormalTok{ cut\_ENN)}
+\NormalTok{row\_d   }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Modelo =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"ENN (cut=\%.3f)"}\NormalTok{, cut\_ENN), }\AttributeTok{Ntrain =}\NormalTok{ res\_d}\SpecialCharTok{$}\NormalTok{n\_train, }\AttributeTok{Cutoff =}\NormalTok{ res\_d}\SpecialCharTok{$}\NormalTok{cutoff, res\_d}\SpecialCharTok{$}\NormalTok{metrics)}
+\FunctionTok{kable}\NormalTok{(row\_d, }\AttributeTok{caption =} \StringTok{"Resultados (d): ENN + logística (cut = prop. minoritaria)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1368}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0598}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1026}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1026}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}@{}}
+\caption{Resultados (d): ENN + logística (cut = prop.
+minoritaria)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+ENN (cut=0.067) & 590 & 0.0666667 & 0.9496124 & 0.9333333 & 0.9506173 &
+0.5384615 & 0.9956897 & 0.9419357 & 0.6829268 & 0.6871414 \\
+\end{longtable}
+
+ENN elimina mayoritarios ``ruidosos''. Con corte igual a la proporción
+minoritaria se empuja el modelo a recuperar más positivos.
+
+\section{(e) SMOTE + ENN + Regresión logística (corte
+0.5)}\label{e-smote-enn-regresiuxf3n-loguxedstica-corte-0.5}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{treino\_ENN2 }\OtherTok{\textless{}{-}} \FunctionTok{ENN\_manual}\NormalTok{(treino\_imp, }\AttributeTok{target =}\NormalTok{ target\_var, }\AttributeTok{k =} \DecValTok{3}\NormalTok{, }\AttributeTok{majority\_class =}\NormalTok{ maj\_class)}
+\NormalTok{rec\_smote2  }\OtherTok{\textless{}{-}} \FunctionTok{recipe}\NormalTok{(}\FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(target\_var, }\StringTok{"\textasciitilde{} ."}\NormalTok{)), }\AttributeTok{data =}\NormalTok{ treino\_ENN2) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{step\_smote}\NormalTok{(}\FunctionTok{all\_outcomes}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{step\_zv}\NormalTok{(}\FunctionTok{all\_predictors}\NormalTok{())}
+\NormalTok{smote2\_prep      }\OtherTok{\textless{}{-}} \FunctionTok{prep}\NormalTok{(rec\_smote2)}
+\NormalTok{treino\_ENN\_SMOTE }\OtherTok{\textless{}{-}} \FunctionTok{bake}\NormalTok{(smote2\_prep, }\AttributeTok{new\_data =} \ConstantTok{NULL}\NormalTok{)}
+
+\NormalTok{res\_e }\OtherTok{\textless{}{-}} \FunctionTok{eval\_logit}\NormalTok{(treino\_ENN\_SMOTE, teste\_imp, }\AttributeTok{cutoff =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{row\_e }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Modelo =} \StringTok{"SMOTE+ENN (cut=0.5)"}\NormalTok{, }\AttributeTok{Ntrain =}\NormalTok{ res\_e}\SpecialCharTok{$}\NormalTok{n\_train, }\AttributeTok{Cutoff =}\NormalTok{ res\_e}\SpecialCharTok{$}\NormalTok{cutoff, res\_e}\SpecialCharTok{$}\NormalTok{metrics)}
+\FunctionTok{kable}\NormalTok{(row\_e, }\AttributeTok{caption =} \StringTok{"Resultados (e): SMOTE+ENN + logística (cut=0.5)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1709}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0598}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0598}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1026}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1026}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0769}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0855}}@{}}
+\caption{Resultados (e): SMOTE+ENN + logística (cut=0.5)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+SMOTE+ENN (cut=0.5) & 1100 & 0.5 & 0.9457364 & 0.9333333 & 0.9465021 &
+0.5185185 & 0.995671 & 0.9398946 & 0.6666667 & 0.6726085 \\
+\end{longtable}
+
+La combinación no necesariamente supera a SMOTE solo; si ENN elimina
+casos informativos antes del balanceo, la señal puede debilitarse.
+
+\section{(f) Base desbalanceada + Regresión logística (dos
+cortes)}\label{f-base-desbalanceada-regresiuxf3n-loguxedstica-dos-cortes}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Sin SMOTE/ENN: solo imputación/normalización}
+
+\NormalTok{res\_f1 }\OtherTok{\textless{}{-}} \FunctionTok{eval\_logit}\NormalTok{(treino\_imp, teste\_imp, }\AttributeTok{cutoff =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{row\_f1 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Modelo =} \StringTok{"Desbalanceada (cut=0.5)"}\NormalTok{, }\AttributeTok{Ntrain =}\NormalTok{ res\_f1}\SpecialCharTok{$}\NormalTok{n\_train, }\AttributeTok{Cutoff =}\NormalTok{ res\_f1}\SpecialCharTok{$}\NormalTok{cutoff, res\_f1}\SpecialCharTok{$}\NormalTok{metrics)}
+
+\NormalTok{res\_f2 }\OtherTok{\textless{}{-}} \FunctionTok{eval\_logit}\NormalTok{(treino\_imp, teste\_imp, }\AttributeTok{cutoff =}\NormalTok{ minority\_prop)}
+\NormalTok{row\_f2 }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Modelo =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"Desbalanceada (cut=\%.3f)"}\NormalTok{, minority\_prop), }\AttributeTok{Ntrain =}\NormalTok{ res\_f2}\SpecialCharTok{$}\NormalTok{n\_train, }\AttributeTok{Cutoff =}\NormalTok{ res\_f2}\SpecialCharTok{$}\NormalTok{cutoff, res\_f2}\SpecialCharTok{$}\NormalTok{metrics)}
+
+\FunctionTok{kable}\NormalTok{(row\_f1, }\AttributeTok{caption =} \StringTok{"Resultados (f1): Desbalanceada + logística (cut=0.5)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1967}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0574}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0574}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0820}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0984}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0984}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0820}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0820}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0820}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0820}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0820}}@{}}
+\caption{Resultados (f1): Desbalanceada + logística
+(cut=0.5)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Desbalanceada (cut=0.5) & 600 & 0.5 & 0.9457364 & 0.6666667 & 0.962963 &
+0.5263158 & 0.9790795 & 0.8012336 & 0.5882353 & 0.5641027 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(row\_f2, }\AttributeTok{caption =} \StringTok{"Resultados (f2): Desbalanceada + logística (cut=prop. minoritaria)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.2047}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0551}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0787}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0787}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0945}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0945}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0787}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0787}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0787}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0787}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0787}}@{}}
+\caption{Resultados (f2): Desbalanceada + logística (cut=prop.
+minoritaria)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Desbalanceada (cut=0.064) & 600 & 0.0641026 & 0.9379845 & 0.9333333 &
+0.9382716 & 0.4827586 & 0.9956332 & 0.9357992 & 0.6363636 & 0.6457311 \\
+\end{longtable}
+
+Tabla comparativa final
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_final }\OtherTok{\textless{}{-}}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{bind\_rows}\NormalTok{(row\_c, row\_d, row\_e, row\_f1, row\_f2) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{as\_tibble}\NormalTok{()}
+
+\FunctionTok{kable}\NormalTok{(tabla\_final, }\AttributeTok{digits =} \DecValTok{3}\NormalTok{, }\AttributeTok{caption =} \StringTok{"Resumen de desempeño por estrategia"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.2524}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0680}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0680}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0874}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1165}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.1165}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0583}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0583}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0583}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0583}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 20\tabcolsep) * \real{0.0583}}@{}}
+\caption{Resumen de desempeño por estrategia}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Ntrain
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Cutoff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Sensitivity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Specificity
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+PPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+NPV
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Gmean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+MCC
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+SMOTE (cut=0.5) & 1120 & 0.500 & 0.953 & 0.933 & 0.955 & 0.560 & 0.996 &
+0.944 & 0.700 & 0.702 \\
+ENN (cut=0.067) & 590 & 0.067 & 0.950 & 0.933 & 0.951 & 0.538 & 0.996 &
+0.942 & 0.683 & 0.687 \\
+SMOTE+ENN (cut=0.5) & 1100 & 0.500 & 0.946 & 0.933 & 0.947 & 0.519 &
+0.996 & 0.940 & 0.667 & 0.673 \\
+Desbalanceada (cut=0.5) & 600 & 0.500 & 0.946 & 0.667 & 0.963 & 0.526 &
+0.979 & 0.801 & 0.588 & 0.564 \\
+Desbalanceada (cut=0.064) & 600 & 0.064 & 0.938 & 0.933 & 0.938 & 0.483
+& 0.996 & 0.936 & 0.636 & 0.646 \\
+\end{longtable}
+
+\section{(g) Discusión y
+conclusión}\label{g-discusiuxf3n-y-conclusiuxf3n}
+
+Criterios robustos en desbalance. En datos desbalanceados, F1, G-mean y
+MCC son métricas más informativas que la exactitud. F1 resume
+precisión--recobrado, G-mean evalúa el balance
+sensibilidad--especificidad y MCC mide la correlación entre predicción y
+verdad (--1 a 1), siendo muy exigente.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Elegimos el "mejor" por F1 y, como desempate, por MCC y G{-}mean}
+
+\NormalTok{pick }\OtherTok{\textless{}{-}}\NormalTok{ tabla\_final }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\FunctionTok{across}\NormalTok{(}\FunctionTok{c}\NormalTok{(F1, MCC, Gmean), as.numeric)) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(F1), }\FunctionTok{desc}\NormalTok{(MCC), }\FunctionTok{desc}\NormalTok{(Gmean)) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{best\_model   }\OtherTok{\textless{}{-}}\NormalTok{ pick}\SpecialCharTok{$}\NormalTok{Modelo}
+\NormalTok{best\_f1      }\OtherTok{\textless{}{-}}\NormalTok{ pick}\SpecialCharTok{$}\NormalTok{F1}
+\NormalTok{best\_mcc     }\OtherTok{\textless{}{-}}\NormalTok{ pick}\SpecialCharTok{$}\NormalTok{MCC}
+\NormalTok{best\_gmean   }\OtherTok{\textless{}{-}}\NormalTok{ pick}\SpecialCharTok{$}\NormalTok{Gmean}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Conclusión principal.}\label{conclusiuxf3n-principal.}
+
+La estrategia con mejor compromiso global fue r best\_model, con F1 = r
+sprintf(`\%.3f', best\_f1), MCC = r sprintf(`\%.3f', best\_mcc) y G-mean
+= r sprintf(`\%.3f', best\_gmean). Esto indica que logra detectar más
+positivos sin deteriorar en exceso la precisión ni la especificidad, y
+mantiene una correlación alta entre las predicciones y la realidad.
+
+\subsection{Influencia del punto de
+corte.}\label{influencia-del-punto-de-corte.}
+
+Con corte = 0.5 en base desbalanceada, el clasificador favorece la clase
+mayoritaria (alta especificidad, baja sensibilidad).
+
+Con corte = proporción minoritaria, aumenta la sensibilidad (recupera
+más casos positivos) a costa de cierta pérdida en precisión.
+
+Tras SMOTE, un corte = 0.5 vuelve razonable porque el entrenamiento está
+balanceado; de allí el buen F1/G-mean/MCC observados.
+
+\subsection{Qué usaría en
+producción.}\label{quuxe9-usaruxeda-en-producciuxf3n.}
+
+Adoptaría SMOTE + logística (con pipeline de imputación kNN →
+normalización, y chequeo de predictores constantes), dejando el punto de
+corte calibrado en validación según la métrica prioritaria clínica
+(p.~ej., maximizar F1 o un costo asimétrico de falso negativo).
+
+ENN puede ser útil cuando hay mucho ruido en la mayoría, pero en estos
+datos no superó a SMOTE solo.
+
+El preprocesamiento importa: con datos clínicos desbalanceados y con NA,
+la imputación multivariada, el balanceo y la calibración del umbral
+hacen la diferencia entre un modelo ``con buena exactitud'' y uno
+realmente útil para detectar casos positivos.
+
+\end{document}
