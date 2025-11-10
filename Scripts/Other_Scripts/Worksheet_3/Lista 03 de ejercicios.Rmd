@@ -1,0 +1,317 @@
+---
+title: "Lista 03 – Métodos de Preprocesamiento de Datos"
+subtitle: "Análisis de datos y estrategias de balanceo"
+author:
+  "Víctor Mauricio Ochoa García, Salvador Enrique Rodríguez Hernández"
+institute: "Universidad de El Salvador"
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+output:
+  pdf_document:      
+    toc_depth: 2
+    number_sections: true
+    latex_engine: xelatex
+    keep_tex: true
+  html_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+geometry: margin=1in
+fontsize: 11pt
+---
+\newpage
+
+\tableofcontents
+
+\newpage
+
+# (a) Análisis descriptivo del conjunto *mtcars*
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Cargar paquetes requeridos
+library(datasets)
+library(ggplot2)
+library(dplyr)
+library(patchwork)  
+library(infotheo)
+library(rsample)
+
+# Para tablas elegantes
+has_gt <- requireNamespace("gt", quietly = TRUE)
+has_kableExtra <- requireNamespace("kableExtra", quietly = TRUE)
+
+# Cargar la base de datos
+data("mtcars")
+mtg <- mtcars  
+
+predictores <- setdiff(names(mtg), "mpg")
+
+cat_vars <- c("am", "vs", "cyl", "gear")        # tratar como categóricas
+num_vars <- setdiff(predictores, cat_vars)      # el resto numéricas 
+
+# Función para graficar
+graficar_pred <- function(var){
+  if (var %in% cat_vars) {
+    ggplot(mtg, aes(x = factor(.data[[var]]), y = mpg)) +
+      geom_boxplot(width = 0.65, alpha = 0.7, outlier.alpha = 0) +
+      geom_jitter(width = 0.15, alpha = 0.6, size = 1.5) +
+      labs(title = var, x = var, y = "mpg") +
+      theme_minimal(base_size = 11)
+  } else {
+    ggplot(mtg, aes(x = .data[[var]], y = mpg)) +
+      geom_point(alpha = 0.7, size = 1.8) +
+      geom_smooth(method = "lm", se = FALSE, linewidth = 0.7) +
+      labs(title = var, x = var, y = "mpg") +
+      theme_minimal(base_size = 11)
+  }
+}
+
+# Crear lista de gráficas
+plots <- lapply(predictores, graficar_pred)
+
+# Mostrar las gráficas de 2 en 2 para mejor visibilidad
+for (i in seq(1, length(plots), 2)) {
+  patch <- wrap_plots(plots[i:min(i+1, length(plots))], ncol = 2)
+  print(patch)
+}
+
+```
+
+# (b) Selección de variables con el método mRMR
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Crear versión discreta de mpg (para medidas de información)
+
+mtg_discr <- mtg %>%
+mutate(mpg_disc = discretize(mpg, disc = "equalfreq", nbins = 4))
+
+# Calcular relevancia
+
+relevancia <- data.frame(
+variable = setdiff(names(mtg), "mpg"),
+tipo = NA,
+medida = NA
+)
+
+for (var in relevancia$variable) {
+if (is.numeric(mtg[[var]])) {
+relevancia[relevancia$variable == var, "tipo"] <- "Numérica"
+relevancia[relevancia$variable == var, "medida"] <- abs(cor(mtg$mpg, mtg[[var]], method = "pearson"))
+} else {
+relevancia[relevancia$variable == var, "tipo"] <- "Categórica"
+relevancia[relevancia$variable == var, "medida"] <- mutinformation(mtg_discr$mpg_disc, mtg[[var]])
+}
+}
+
+relevancia <- relevancia %>% arrange(desc(medida))
+
+# Mostrar tabla elegante dependiendo del formato de salida
+
+if (knitr::is_latex_output() && has_kableExtra) {
+knitr::kable(
+relevancia %>% mutate(medida = round(medida, 4)),
+format = "latex",
+booktabs = TRUE,
+digits = 4,
+col.names = c("Variable", "Tipo", "Medida de relevancia"),
+caption = "Tabla 1. Relevancia de las variables predictoras respecto a mpg"
+) |>
+kableExtra::kable_styling(full_width = FALSE, position = "center")
+} else if (has_gt) {
+relevancia %>%
+dplyr::mutate(medida = round(medida, 4)) %>%
+gt::gt() %>%
+gt::tab_header(
+title = "Tabla 1. Relevancia de las variables predictoras respecto a mpg"
+) %>%
+gt::cols_label(
+variable = "Variable",
+tipo = "Tipo de variable",
+medida = "Medida de relevancia"
+)
+} else {
+print(relevancia)
+}
+```
+
+# (c) Modelo de regresión lineal múltiple (todas las variables)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# ----------------------------
+
+# Utilidades para mostrar tablas
+
+# ----------------------------
+
+has_gt         <- requireNamespace("gt", quietly = TRUE)
+has_kableExtra <- requireNamespace("kableExtra", quietly = TRUE)
+has_broom      <- requireNamespace("broom", quietly = TRUE)
+
+show_table <- function(df, title = NULL, latex_caption = NULL){
+if (knitr::is_latex_output() && has_kableExtra) {
+knitr::kable(
+df,
+format   = "latex",
+booktabs = TRUE,
+digits   = 4,
+caption  = ifelse(is.null(latex_caption), title, latex_caption)
+) |>
+kableExtra::kable_styling(full_width = FALSE, position = "center")
+} else if (has_gt) {
+df |>
+gt::gt() |>
+gt::tab_header(title = title)
+} else {
+print(df)
+}
+}
+
+# ----------------------------
+
+# División y ajuste del modelo
+
+# ----------------------------
+
+set.seed(1234)
+split_obj <- initial_split(mtg, prop = 0.7)
+train_data <- training(split_obj)
+test_data  <- testing(split_obj)
+
+modelo_lm <- lm(mpg ~ ., data = train_data)
+
+# ----------------------------
+
+# Predicciones y métricas
+
+# ----------------------------
+
+predicciones <- predict(modelo_lm, newdata = test_data)
+ecm <- mean((test_data$mpg - predicciones)^2)
+sst <- sum((test_data$mpg - mean(test_data$mpg))^2)
+sse <- sum((test_data$mpg - predicciones)^2)
+r2_prueba <- 1 - sse / sst
+
+# ----------------------------
+
+# Tabla de coeficientes (modelo completo)
+
+# ----------------------------
+
+if (has_broom) {
+coef_full_tbl <- broom::tidy(modelo_lm) |>
+dplyr::mutate(dplyr::across(where(is.numeric), ~round(.x, 6))) |>
+dplyr::rename(Termino = term, Estimacion = estimate, `Error.Estd` = std.error,
+`t` = statistic, `p.value` = p.value)
+} else {
+sm <- summary(modelo_lm)
+coef_full_tbl <- as.data.frame(sm$coefficients)
+coef_full_tbl$Termino <- rownames(coef_full_tbl)
+rownames(coef_full_tbl) <- NULL
+names(coef_full_tbl) <- c("Estimacion","Error.Estd","t","p.value","Termino")
+coef_full_tbl <- coef_full_tbl[, c("Termino","Estimacion","Error.Estd","t","p.value")]
+coef_full_tbl[, -1] <- lapply(coef_full_tbl[, -1], function(x) round(x,6))
+}
+
+show_table(coef_full_tbl,
+title = "Coeficientes – Modelo completo",
+latex_caption = "Coeficientes – Modelo completo")
+
+# ----------------------------
+
+# Tabla de medidas de ajuste (modelo completo)
+
+# ----------------------------
+
+sm <- summary(modelo_lm)
+fit_full_tbl <- data.frame(
+`R^2 (train)`        = round(sm$r.squared, 4),
+`R^2 ajustado (train)` = round(sm$adj.r.squared, 4),
+`ECM (test)`         = round(ecm, 4),
+`R^2 (test)`         = round(r2_prueba, 4),
+`Sigma resid.`       = round(sm$sigma, 4),
+check.names = FALSE
+)
+
+show_table(fit_full_tbl,
+title = "Medidas de ajuste – Modelo completo",
+latex_caption = "Medidas de ajuste – Modelo completo")
+
+```
+
+# (d) Modelo reducido con variables seleccionadas por mRMR
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Ajuste con 3 variables más relevantes (wt, cyl, disp)
+
+modelo_mrmr <- lm(mpg ~ wt + cyl + disp, data = train_data)
+
+# Predicciones y métricas
+
+pred_mrmr <- predict(modelo_mrmr, newdata = test_data)
+ecm_mrmr  <- mean((test_data$mpg - pred_mrmr)^2)
+sst_mrmr  <- sum((test_data$mpg - mean(test_data$mpg))^2)
+sse_mrmr  <- sum((test_data$mpg - pred_mrmr)^2)
+r2_mrmr   <- 1 - sse_mrmr / sst_mrmr
+
+# Tabla de coeficientes (modelo mRMR)
+
+if (has_broom) {
+coef_mrmr_tbl <- broom::tidy(modelo_mrmr) |>
+dplyr::mutate(dplyr::across(where(is.numeric), ~round(.x, 6))) |>
+dplyr::rename(Termino = term, Estimacion = estimate, `Error.Estd` = std.error,
+`t` = statistic, `p.value` = p.value)
+} else {
+sm2 <- summary(modelo_mrmr)
+coef_mrmr_tbl <- as.data.frame(sm2$coefficients)
+coef_mrmr_tbl$Termino <- rownames(coef_mrmr_tbl)
+rownames(coef_mrmr_tbl) <- NULL
+names(coef_mrmr_tbl) <- c("Estimacion","Error.Estd","t","p.value","Termino")
+coef_mrmr_tbl <- coef_mrmr_tbl[, c("Termino","Estimacion","Error.Estd","t","p.value")]
+coef_mrmr_tbl[, -1] <- lapply(coef_mrmr_tbl[, -1], function(x) round(x,6))
+}
+
+show_table(coef_mrmr_tbl,
+title = "Coeficientes – Modelo reducido (mRMR)",
+latex_caption = "Coeficientes – Modelo reducido (mRMR)")
+
+# Tabla de medidas de ajuste (modelo mRMR)
+
+sm2 <- summary(modelo_mrmr)
+fit_mrmr_tbl <- data.frame(
+`R^2 (train)`          = round(sm2$r.squared, 4),
+`R^2 ajustado (train)` = round(sm2$adj.r.squared, 4),
+`ECM (test)`           = round(ecm_mrmr, 4),
+`R^2 (test)`           = round(r2_mrmr, 4),
+`Sigma resid.`         = round(sm2$sigma, 4),
+check.names = FALSE
+)
+
+show_table(fit_mrmr_tbl,
+title = "Medidas de ajuste – Modelo reducido (mRMR)",
+latex_caption = "Medidas de ajuste – Modelo reducido (mRMR)")
+
+```
+
+# (e) Comparación entre modelos
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+comparacion <- data.frame(
+Modelo = c("Completo (todas las variables)", "Reducido (3 variables mRMR)"),
+ECM    = c(round(ecm, 4), round(ecm_mrmr, 4)),
+`R^2`  = c(round(r2_prueba, 4), round(r2_mrmr, 4)),
+check.names = FALSE
+)
+
+show_table(comparacion,
+title = "Comparación de desempeño entre modelos",
+latex_caption = "Comparación de desempeño entre modelos")
+
+```
+
+
+
+
+
+
+
+
+
