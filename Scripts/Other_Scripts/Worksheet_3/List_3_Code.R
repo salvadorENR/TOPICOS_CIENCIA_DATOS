@@ -1,36 +1,21 @@
-#################################################################################
-## Códigos - Visualización: Boxplot + Dispersión                              ##
-## Asignatura: Tópicos en Ciencia de Datos                                    ##                                   ##
-#################################################################################
-
-############################################################
-## 0) Carga del conjunto mtcars tal como pide el profe
-############################################################
+# Cargar paquetes requeridos
 library(datasets)
-data("mtcars")
-mtg <- mtcars  # renombrar a 'mtg' para este estudio
-
-############################################################
-## 1) Paquetes para graficar y combinar paneles
-############################################################
 library(ggplot2)
 library(dplyr)
-library(patchwork)  # para unir múltiples gráficos en una grilla
+library(patchwork)  
+library(infotheo)
+library(rsample)
 
-############################################################
-## 2) Definir qué predictores son categóricos y cuáles numéricos
-##    (mantener 'carb' como dispersión, es decir, numérico)
-############################################################
+# Cargar la base de datos
+data("mtcars")
+mtg <- mtcars  
+
 predictores <- setdiff(names(mtg), "mpg")
 
 cat_vars <- c("am", "vs", "cyl", "gear")        # tratar como categóricas
-num_vars <- setdiff(predictores, cat_vars)      # el resto numéricas (incluye 'carb')
+num_vars <- setdiff(predictores, cat_vars)      # el resto numéricas 
 
-############################################################
-## 3) Función que crea un gráfico por predictor:
-##    - Si es categórico: boxplot + jitter
-##    - Si es numérico : dispersión + recta lm
-############################################################
+# Función para graficar
 graficar_pred <- function(var){
   if (var %in% cat_vars) {
     ggplot(mtg, aes(x = factor(.data[[var]]), y = mpg)) +
@@ -47,162 +32,105 @@ graficar_pred <- function(var){
   }
 }
 
-############################################################
-## 4) Construir la lista de gráficos y combinarlos
-############################################################
+# Crear lista de gráficas
 plots <- lapply(predictores, graficar_pred)
 
-# Armar una grilla (ajusta ncol a tu gusto)
-p_final <- wrap_plots(plots, ncol = 3) +
-  plot_annotation(
-    title = "mtcars: mpg vs cada predictor",
-    subtitle = "Boxplot + jitter (categóricas) / Dispersión + recta (numéricas; 'carb' incluido como dispersión)"
-  )
+# Mostrar las gráficas de 2 en 2 para mejor visibilidad
+for (i in seq(1, length(plots), 2)) {
+  patch <- wrap_plots(plots[i:min(i+1, length(plots))], ncol = 2)
+  print(patch)
+}
 
-p_final
-
-############################################################
-## (b) Cálculo de la relevancia entre mpg y cada predictor
-############################################################
-
-library(infotheo)
-
-# Crear una versión discreta de mpg (para medidas de información)
+# Crear versión discreta de mpg (para medidas de información)
 mtg_discr <- mtg %>%
-  mutate(mpg_disc = discretize(mpg, disc = "equalfreq", nbins = 4)) # discretiza mpg en 4 grupos
+  mutate(mpg_disc = discretize(mpg, disc = "equalfreq", nbins = 4))
 
-# Inicializar vector para almacenar resultados
+# Calcular relevancia
 relevancia <- data.frame(
   variable = setdiff(names(mtg), "mpg"),
   tipo = NA,
   medida = NA
 )
 
-# Calcular relevancia dependiendo del tipo de variable
 for (var in relevancia$variable) {
   if (is.numeric(mtg[[var]])) {
-    # Correlación absoluta (Pearson)
     relevancia[relevancia$variable == var, "tipo"] <- "Numérica"
     relevancia[relevancia$variable == var, "medida"] <- abs(cor(mtg$mpg, mtg[[var]], method = "pearson"))
   } else {
-    # Información mutua (para categóricas)
     relevancia[relevancia$variable == var, "tipo"] <- "Categórica"
     relevancia[relevancia$variable == var, "medida"] <- mutinformation(mtg_discr$mpg_disc, mtg[[var]])
   }
 }
 
-# Ordenar de mayor a menor relevancia
 relevancia <- relevancia %>% arrange(desc(medida))
 
-relevancia
-
-############################################################
-## (c) División entrenamiento/prueba y modelo de regresión
-############################################################
-
-library(rsample)  # para dividir los datos
-
-# Fijar semilla para reproducibilidad
+# División y ajuste del modelo
 set.seed(1234)
-
-# Dividir 70% entrenamiento, 30% prueba
 split_obj <- initial_split(mtg, prop = 0.7)
-
 train_data <- training(split_obj)
 test_data  <- testing(split_obj)
 
-############################################################
-## Ajuste del modelo de regresión lineal múltiple
-############################################################
+modelo_lm <- lm(mpg ~ ., data = train_data)
 
-modelo_lm <- lm(mpg ~ ., data = train_data)  # todas las variables predictoras
-
-# Resumen del modelo (opcional para interpretar)
-summary(modelo_lm)
-
-############################################################
-## Predicciones sobre el conjunto de prueba
-############################################################
-
+# Predicciones y métricas
 predicciones <- predict(modelo_lm, newdata = test_data)
-
-############################################################
-## Cálculo del Error Cuadrático Medio (ECM)
-############################################################
-
 ecm <- mean((test_data$mpg - predicciones)^2)
-cat("Error Cuadrático Medio (ECM) en el conjunto de prueba:", ecm, "\n")
-
-############################################################
-## Evaluación adicional (opcional)
-############################################################
-
-# También puedes calcular R² en prueba si deseas comparar desempeño
 sst <- sum((test_data$mpg - mean(test_data$mpg))^2)
 sse <- sum((test_data$mpg - predicciones)^2)
 r2_prueba <- 1 - sse / sst
-cat("R² en conjunto de prueba:", r2_prueba, "\n")
 
-############################################################
-## (d) Modelo de regresión lineal múltiple con 3 variables
-##     seleccionadas por relevancia (mRMR)
-############################################################
+# Tabla de coeficientes (modelo completo)
+sm <- summary(modelo_lm)
+coef_full_tbl <- as.data.frame(sm$coefficients)
+coef_full_tbl$Termino <- rownames(coef_full_tbl)
+rownames(coef_full_tbl) <- NULL
+names(coef_full_tbl) <- c("Estimacion","Error.Estd","t","p.value","Termino")
+coef_full_tbl <- coef_full_tbl[, c("Termino","Estimacion","Error.Estd","t","p.value")]
+coef_full_tbl[, -1] <- lapply(coef_full_tbl[, -1], function(x) round(x,6))
 
-# Ajustar el modelo solo con las tres variables más relevantes
-modelo_mrmr <- lm(mpg ~ wt + cyl + disp, data = train_data)
-
-# Resumen del modelo (opcional para interpretación)
-summary(modelo_mrmr)
-
-############################################################
-## Predicciones sobre el conjunto de prueba
-############################################################
-
-pred_mrmr <- predict(modelo_mrmr, newdata = test_data)
-
-############################################################
-## Cálculo del Error Cuadrático Medio (ECM)
-############################################################
-
-ecm_mrmr <- mean((test_data$mpg - pred_mrmr)^2)
-cat("Error Cuadrático Medio (ECM) con mRMR (3 variables):", ecm_mrmr, "\n")
-
-############################################################
-## Evaluación adicional (opcional)
-############################################################
-
-# Cálculo del R² en el conjunto de prueba
-sst_mrmr <- sum((test_data$mpg - mean(test_data$mpg))^2)
-sse_mrmr <- sum((test_data$mpg - pred_mrmr)^2)
-r2_mrmr <- 1 - sse_mrmr / sst_mrmr
-cat("R² en conjunto de prueba (mRMR):", r2_mrmr, "\n")
-
-############################################################
-## (e) Comparación entre el modelo completo y el modelo mRMR
-############################################################
-
-# Crear un resumen comparativo
-comparacion <- data.frame(
-  Modelo = c("Completo (todas las variables)", "Reducido (3 variables mRMR)"),
-  ECM = c(ecm, ecm_mrmr),
-  R2 = c(r2_prueba, r2_mrmr)
+# Tabla de medidas de ajuste (modelo completo)
+fit_full_tbl <- data.frame(
+  `R^2 (train)`        = round(sm$r.squared, 4),
+  `R^2 ajustado (train)` = round(sm$adj.r.squared, 4),
+  `ECM (test)`         = round(ecm, 4),
+  `R^2 (test)`         = round(r2_prueba, 4),
+  `Sigma resid.`       = round(sm$sigma, 4),
+  check.names = FALSE
 )
 
-cat("\n== Comparación de desempeño entre modelos ==\n")
-print(comparacion)
+# Ajuste con 3 variables más relevantes (wt, cyl, disp)
+modelo_mrmr <- lm(mpg ~ wt + cyl + disp, data = train_data)
 
-############################################################
-## Interpretación automática (básica)
-############################################################
+# Predicciones y métricas
+pred_mrmr <- predict(modelo_mrmr, newdata = test_data)
+ecm_mrmr  <- mean((test_data$mpg - pred_mrmr)^2)
+sst_mrmr  <- sum((test_data$mpg - mean(test_data$mpg))^2)
+sse_mrmr  <- sum((test_data$mpg - pred_mrmr)^2)
+r2_mrmr   <- 1 - sse_mrmr / sst_mrmr
 
-if (ecm_mrmr < ecm) {
-  cat("\n➡️ El modelo reducido tiene un ECM menor, por lo tanto predice con menor error promedio.\n")
-} else {
-  cat("\n➡️ El modelo completo tiene un ECM menor, indicando mejor capacidad predictiva.\n")
-}
+# Tabla de coeficientes (modelo mRMR)
+sm2 <- summary(modelo_mrmr)
+coef_mrmr_tbl <- as.data.frame(sm2$coefficients)
+coef_mrmr_tbl$Termino <- rownames(coef_mrmr_tbl)
+rownames(coef_mrmr_tbl) <- NULL
+names(coef_mrmr_tbl) <- c("Estimacion","Error.Estd","t","p.value","Termino")
+coef_mrmr_tbl <- coef_mrmr_tbl[, c("Termino","Estimacion","Error.Estd","t","p.value")]
+coef_mrmr_tbl[, -1] <- lapply(coef_mrmr_tbl[, -1], function(x) round(x,6))
 
-if (r2_mrmr > r2_prueba) {
-  cat("➡️ Además, el modelo reducido explica más varianza (R² mayor), siendo más eficiente.\n")
-} else {
-  cat("➡️ El modelo completo explica más varianza, aunque con mayor complejidad.\n")
-}
+# Tabla de medidas de ajuste (modelo mRMR)
+fit_mrmr_tbl <- data.frame(
+  `R^2 (train)`          = round(sm2$r.squared, 4),
+  `R^2 ajustado (train)` = round(sm2$adj.r.squared, 4),
+  `ECM (test)`           = round(ecm_mrmr, 4),
+  `R^2 (test)`           = round(r2_mrmr, 4),
+  `Sigma resid.`         = round(sm2$sigma, 4),
+  check.names = FALSE
+)
+
+# Comparación entre modelos
+comparacion <- data.frame(
+  Modelo = c("Completo (todas las variables)", "Reducido (3 variables mRMR)"),
+  ECM    = c(round(ecm, 4), round(ecm_mrmr, 4)),
+  `R^2`  = c(round(r2_prueba, 4), round(r2_mrmr, 4)),
+  check.names = FALSE
+)
