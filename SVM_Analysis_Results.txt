@@ -1,0 +1,211 @@
+
+(a) Binarización completada. Distribución de Y:
+
+      neg       pos 
+0.5387205 0.4612795 
+
+(b.1) Ranking mRMR (todas las variables) - tabla Variable / Score:
+ Variable Score
+     thal  0.16
+  thalach  0.04
+       cp  0.04
+  oldpeak  0.04
+    exang  0.04
+       ca  0.04
+      sex  0.02
+    slope  0.01
+  restecg  0.01
+      fbs  0.00
+     chol  0.00
+      age  0.00
+ trestbps  0.00
+
+(b.2) Nombres de coeficientes (dummies) seleccionados por stepwise:
+ [1] "thal6"     "thal7"     "ca"        "cp2"       "cp3"       "cp4"       "oldpeak"  
+ [8] "slope2"    "slope3"    "sexTRUE"   "trestbps"  "exangTRUE" "thalach"  
+
+Mapeo (coeficiente -> término original):
+      Coef     Term
+     thal6     thal
+     thal7     thal
+        ca       ca
+       cp2       cp
+       cp3       cp
+       cp4       cp
+   oldpeak  oldpeak
+    slope2    slope
+    slope3    slope
+   sexTRUE      sex
+  trestbps trestbps
+ exangTRUE    exang
+   thalach  thalach
+
+Variables originales incluidas por stepwise (sin niveles/dummies):
+[1] "thal"     "ca"       "cp"       "oldpeak"  "slope"    "sex"      "trestbps" "exang"   
+[9] "thalach" 
+
+(b.3) Variables por criterio de dominio (lista fija intersectada con nombres del dataset):
+ [1] "age"      "sex"      "cp"       "trestbps" "chol"     "fbs"      "restecg"  "thalach" 
+ [9] "exang"    "oldpeak"  "slope"    "ca"       "thal"    
+
+Variables comunes a utilizar (k=6):
+[1] "thal"    "thalach" "cp"      "oldpeak" "exang"   "ca"     
+
+Resumen de selección disponible (mRMR table, mapping stepwise, dominio, comunes):
+[1] "mRMR_full_table"  "mRMR_topk_k"      "Stepwise_coefs"   "Stepwise_terms"  
+[5] "Mapping_stepwise" "Dominio"          "Comunes_k6"      
+
+Tamaños Train / Test: 207 / 90 
+Distribución Y en Train:
+
+      neg       pos 
+0.5410628 0.4589372 
+Distribución Y en Test:
+
+      neg       pos 
+0.5333333 0.4666667 
+
+(e) Rejilla para C (lineal):
+[1] 1e-03 1e-02 1e-01 1e+00 1e+01 1e+02 1e+03
+
+Resumen ajuste SVM lineal:
+
+Parameter tuning of ‘svm’:
+
+- sampling method: 5-fold cross validation 
+
+- best parameters:
+ cost
+ 0.01
+
+- best performance: 0.1351916 
+
+- Detailed performance results:
+   cost     error dispersion
+1 1e-03 0.3711963 0.09132864
+2 1e-02 0.1351916 0.07408154
+3 1e-01 0.1399535 0.07730560
+4 1e+00 0.1399535 0.06699960
+5 1e+01 0.1351916 0.06325239
+6 1e+02 0.1351916 0.06325239
+7 1e+03 0.1351916 0.06325239
+
+Mejor C (lineal) = 0.01 
+
+(f) Rejilla para RBF: C y gamma
+Rejilla C:
+[1] 1e-03 1e-02 1e-01 1e+00 1e+01 1e+02 1e+03
+Rejilla gamma:
+[1] 0.0078125 0.0156250 0.0312500 0.0625000 0.1250000 0.2500000 0.5000000 1.0000000
+
+Resumen ajuste RBF:
+
+Parameter tuning of ‘svm’:
+
+- sampling method: 5-fold cross validation 
+
+- best parameters:
+    gamma cost
+ 0.015625    1
+
+- best performance: 0.1303136 
+
+- Detailed performance results:
+       gamma  cost     error dispersion
+1  0.0078125 1e-03 0.4583043 0.06447222
+2  0.0156250 1e-03 0.4583043 0.06447222
+3  0.0312500 1e-03 0.4583043 0.06447222
+4  0.0625000 1e-03 0.4583043 0.06447222
+5  0.1250000 1e-03 0.4583043 0.06447222
+6  0.2500000 1e-03 0.4583043 0.06447222
+7  0.5000000 1e-03 0.4583043 0.06447222
+8  1.0000000 1e-03 0.4583043 0.06447222
+9  0.0078125 1e-02 0.4583043 0.06447222
+10 0.0156250 1e-02 0.4583043 0.06447222
+11 0.0312500 1e-02 0.4583043 0.06447222
+12 0.0625000 1e-02 0.4583043 0.06447222
+13 0.1250000 1e-02 0.4583043 0.06447222
+14 0.2500000 1e-02 0.4583043 0.06447222
+15 0.5000000 1e-02 0.4583043 0.06447222
+16 1.0000000 1e-02 0.4583043 0.06447222
+17 0.0078125 1e-01 0.2458769 0.09308528
+18 0.0156250 1e-01 0.1542393 0.07896790
+19 0.0312500 1e-01 0.1638792 0.07833524
+20 0.0625000 1e-01 0.1590012 0.09054244
+21 0.1250000 1e-01 0.1926829 0.08030584
+22 0.2500000 1e-01 0.2502904 0.09989061
+23 0.5000000 1e-01 0.3272938 0.12029221
+24 1.0000000 1e-01 0.4534262 0.06934124
+25 0.0078125 1e+00 0.1353078 0.07424138
+26 0.0156250 1e+00 0.1303136 0.06543172
+27 0.0312500 1e+00 0.1544715 0.05292364
+28 0.0625000 1e+00 0.1688734 0.05625856
+29 0.1250000 1e+00 0.1833914 0.07162706
+30 0.2500000 1e+00 0.1735192 0.07838366
+31 0.5000000 1e+00 0.1926829 0.06850085
+32 1.0000000 1e+00 0.2217189 0.06492960
+33 0.0078125 1e+01 0.1350755 0.06527304
+34 0.0156250 1e+01 0.1495935 0.06476735
+35 0.0312500 1e+01 0.1353078 0.07031990
+36 0.0625000 1e+01 0.1544715 0.07187804
+37 0.1250000 1e+01 0.1641115 0.05760790
+38 0.2500000 1e+01 0.1979094 0.05476871
+39 0.5000000 1e+01 0.2218351 0.06556224
+40 1.0000000 1e+01 0.2317073 0.04253155
+41 0.0078125 1e+02 0.1304297 0.06115178
+42 0.0156250 1e+02 0.1447154 0.06379654
+43 0.0312500 1e+02 0.1544715 0.04696837
+44 0.0625000 1e+02 0.1783972 0.06439633
+45 0.1250000 1e+02 0.2219512 0.06629423
+46 0.2500000 1e+02 0.2315912 0.05951375
+47 0.5000000 1e+02 0.2411150 0.07489646
+48 1.0000000 1e+02 0.2124274 0.05121938
+49 0.0078125 1e+03 0.1445993 0.06090644
+50 0.0156250 1e+03 0.1687573 0.06051427
+51 0.0312500 1e+03 0.2072009 0.06764504
+52 0.0625000 1e+03 0.2314750 0.05848229
+53 0.1250000 1e+03 0.2459930 0.06731044
+54 0.2500000 1e+03 0.2506388 0.07713047
+55 0.5000000 1e+03 0.2411150 0.06658609
+56 1.0000000 1e+03 0.2413473 0.07730953
+
+
+Mejores parámetros para RBF: C = 1 , gamma = 0.015625 
+
+=== Tabla comparativa final (fila1=Hard, fila2=Soft, fila3=TunedLinear, fila4=RBF_Tuned2D) ===
+            Accuracy Sensitivity Specificity      PPV      NPV    Gmean       F1      MCC
+Hard        0.655556    0.428571    0.854167 0.720000 0.630769 0.605038 0.537313 0.314922
+Soft        0.744444    0.547619    0.916667 0.851852 0.698413 0.708508 0.666667 0.505450
+TunedLinear 0.766667    0.595238    0.916667 0.862069 0.721311 0.738671 0.704225 0.546475
+RBF_Tuned2D 0.788889    0.619048    0.937500 0.896552 0.737705 0.761812 0.732394 0.594133
+
+Matriz de confusión - Hard:
+     True
+Pred  neg pos
+  neg  41  24
+  pos   7  18
+
+Matriz de confusión - Soft:
+     True
+Pred  neg pos
+  neg  44  19
+  pos   4  23
+
+Matriz de confusión - TunedLinear:
+     True
+Pred  neg pos
+  neg  44  17
+  pos   4  25
+
+Matriz de confusión - RBF Tuned (C,gamma):
+     True
+Pred  neg pos
+  neg  45  16
+  pos   3  26
+
+Mejor C lineal: 0.01 
+Mejor C RBF: 1  Mejor gamma RBF: 0.015625 
+
+================================================================================
+FIN DEL ANÁLISIS
+================================================================================
