@@ -113,7 +113,7 @@ cat("\n[b] Frecuencia/porcentaje por clase:\n"); print(g_base)
 ggplot(g_base, aes(x = !!sym(target_var), y = n, fill = !!sym(target_var))) +
   geom_col(width = 0.6, show.legend = FALSE) +
   geom_text(aes(label = paste0(round(prop,1), "%")), vjust = -0.3, size = 4) +
-  labs(x = "Clase (Biopsy)", y = "Frecuencia absoluta",
+  labs(x = "Clase (Biopsy)", y = "Pacientes",
        title = "Distribución de la respuesta (conteos y porcentajes)") +
   theme_minimal(base_size = 12)
 

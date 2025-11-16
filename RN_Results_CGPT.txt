@@ -1,0 +1,133 @@
+================================================================================
+RESULTADOS DEL ANÁLISIS — Lista 05: Redes Neuronales
+Generado: 2025-11-16 11:27:04 
+================================================================================
+
+
+(a) Estructura del dataset 'heart':
+'data.frame':	297 obs. of  14 variables:
+ $ age     : num  63 67 67 37 41 56 62 57 63 53 ...
+ $ sex     : logi  TRUE TRUE TRUE TRUE FALSE TRUE ...
+ $ cp      : Factor w/ 4 levels "1","2","3","4": 1 4 4 3 2 2 4 4 4 4 ...
+ $ trestbps: num  145 160 120 130 130 120 140 120 130 140 ...
+ $ chol    : num  233 286 229 250 204 236 268 354 254 203 ...
+ $ fbs     : logi  TRUE FALSE FALSE FALSE FALSE FALSE ...
+ $ restecg : Factor w/ 3 levels "0","1","2": 3 3 3 1 3 1 3 1 3 3 ...
+ $ thalach : num  150 108 129 187 172 178 160 163 147 155 ...
+ $ exang   : logi  FALSE TRUE TRUE FALSE FALSE FALSE ...
+ $ oldpeak : num  2.3 1.5 2.6 3.5 1.4 0.8 3.6 0.6 1.4 3.1 ...
+ $ slope   : Factor w/ 3 levels "1","2","3": 3 2 2 3 1 1 3 1 2 3 ...
+ $ ca      : num  0 3 2 0 0 0 2 0 1 0 ...
+ $ thal    : Factor w/ 3 levels "3","6","7": 2 1 3 1 1 1 1 1 3 3 ...
+ $ class   : int  0 2 1 0 0 0 3 0 2 1 ...
+ - attr(*, "na.action")= 'omit' Named int [1:6] 88 167 193 267 288 303
+  ..- attr(*, "names")= chr [1:6] "88" "167" "193" "267" ...
+
+(a) Resumen estadístico inicial:
+      age           sex          cp         trestbps          chol      
+ Min.   :29.00   Mode :logical   1: 23   Min.   : 94.0   Min.   :126.0  
+ 1st Qu.:48.00   FALSE:96        2: 49   1st Qu.:120.0   1st Qu.:211.0  
+ Median :56.00   TRUE :201       3: 83   Median :130.0   Median :243.0  
+ Mean   :54.54                   4:142   Mean   :131.7   Mean   :247.4  
+ 3rd Qu.:61.00                           3rd Qu.:140.0   3rd Qu.:276.0  
+ Max.   :77.00                           Max.   :200.0   Max.   :564.0  
+    fbs          restecg    thalach        exang            oldpeak     
+ Mode :logical   0:147   Min.   : 71.0   Mode :logical   Min.   :0.000  
+ FALSE:254       1:  4   1st Qu.:133.0   FALSE:200       1st Qu.:0.000  
+ TRUE :43        2:146   Median :153.0   TRUE :97        Median :0.800  
+                         Mean   :149.6                   Mean   :1.056  
+                         3rd Qu.:166.0                   3rd Qu.:1.600  
+                         Max.   :202.0                   Max.   :6.200  
+ slope         ca         thal        class       
+ 1:139   Min.   :0.0000   3:164   Min.   :0.0000  
+ 2:137   1st Qu.:0.0000   6: 18   1st Qu.:0.0000  
+ 3: 21   Median :0.0000   7:115   Median :0.0000  
+         Mean   :0.6768           Mean   :0.9461  
+         3rd Qu.:1.0000           3rd Qu.:2.0000  
+         Max.   :3.0000           Max.   :4.0000  
+
+(a) Cuadro de frecuencia de 'class' (original):
+  Clase Frecuencia Proporcion
+1     0        160     0.5387
+2     1         54     0.1818
+3     2         35     0.1178
+4     3         35     0.1178
+5     4         13     0.0438
+
+Distribución de Y_bin (absoluta / proporción):
+
+neg pos 
+160 137 
+
+   neg    pos 
+0.5387 0.4613 
+
+Tamaños Train / Test:
+Train: 207  Test: 90 
+Proporciones en Train:
+
+      neg       pos 
+0.5410628 0.4589372 
+Proporciones en Test:
+
+      neg       pos 
+0.5333333 0.4666667 
+
+(b) Red neuronal (size = 3) - métricas en TEST:
+  Accuracy Sensitivity Specificity    PPV    NPV  Gmean     F1    MCC
+1   0.7889      0.6667      0.8958 0.8485 0.7544 0.7728 0.7467 0.5823
+
+(c) Red neuronal (size = 5) - métricas en TEST:
+  Accuracy Sensitivity Specificity    PPV    NPV  Gmean     F1    MCC
+1   0.7444      0.6429      0.8333 0.7714 0.7273 0.7319 0.7013 0.4873
+
+(d) Red neuronal (size = 10) - métricas en TEST:
+  Accuracy Sensitivity Specificity   PPV    NPV  Gmean     F1    MCC
+1   0.7889      0.6429      0.9167 0.871 0.7458 0.7676 0.7397 0.5874
+
+(e) Tabla comparativa de redes (métricas resumen):
+           Accuracy Sensitivity Specificity    PPV    NPV  Gmean     F1
+NN_size_3    0.7889      0.6667      0.8958 0.8485 0.7544 0.7728 0.7467
+NN_size_5    0.7444      0.6429      0.8333 0.7714 0.7273 0.7319 0.7013
+NN_size_10   0.7889      0.6429      0.9167 0.8710 0.7458 0.7676 0.7397
+              MCC
+NN_size_3  0.5823
+NN_size_5  0.4873
+NN_size_10 0.5874
+
+(f) Métricas multiclase (nnet size = 5):
+Accuracy: 0.9889 
+Kappa  : 0.9825 
+Macro-Recall   : 0.9846 
+Macro-Precision: 0.9714 
+Macro-F1       : 0.9766 
+
+(f) Métricas por clase (ByClass):
+         Sensitivity Specificity Pos Pred Value Neg Pred Value Precision
+Class: 0      1.0000      1.0000         1.0000         1.0000    1.0000
+Class: 1      1.0000      1.0000         1.0000         1.0000    1.0000
+Class: 2      0.9231      1.0000         1.0000         0.9872    1.0000
+Class: 3      1.0000      0.9881         0.8571         1.0000    0.8571
+Class: 4      1.0000      1.0000         1.0000         1.0000    1.0000
+         Recall     F1 Prevalence Detection Rate Detection Prevalence
+Class: 0 1.0000 1.0000     0.5333         0.5333               0.5333
+Class: 1 1.0000 1.0000     0.2333         0.2333               0.2333
+Class: 2 0.9231 0.9600     0.1444         0.1333               0.1333
+Class: 3 1.0000 0.9231     0.0667         0.0667               0.0778
+Class: 4 1.0000 1.0000     0.0222         0.0222               0.0222
+         Balanced Accuracy
+Class: 0            1.0000
+Class: 1            1.0000
+Class: 2            0.9615
+Class: 3            0.9940
+Class: 4            1.0000
+
+Se guardaron los siguientes archivos:
+- Lista05_NN_results.RData
+- Lista05_NN_binary_results.csv
+- Lista05_NN_multiclass_byclass.csv
+
+================================================================================
+FIN DEL ANÁLISIS - Lista 05: Redes Neuronales
+================================================================================
+

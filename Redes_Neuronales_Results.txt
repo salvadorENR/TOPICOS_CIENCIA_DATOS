@@ -1,0 +1,675 @@
+================================================================================
+ANÁLISIS REDES NEURONALES - Lista 05
+Timestamp: 2025-11-16 07:54:08 
+================================================================================
+
+(a) BINARIZACIÓN DE LA VARIABLE RESPUESTA
+==========================================
+
+Estructura del conjunto 'heart':
+'data.frame':	297 obs. of  14 variables:
+ $ age     : num  63 67 67 37 41 56 62 57 63 53 ...
+ $ sex     : logi  TRUE TRUE TRUE TRUE FALSE TRUE ...
+ $ cp      : Factor w/ 4 levels "1","2","3","4": 1 4 4 3 2 2 4 4 4 4 ...
+ $ trestbps: num  145 160 120 130 130 120 140 120 130 140 ...
+ $ chol    : num  233 286 229 250 204 236 268 354 254 203 ...
+ $ fbs     : logi  TRUE FALSE FALSE FALSE FALSE FALSE ...
+ $ restecg : Factor w/ 3 levels "0","1","2": 3 3 3 1 3 1 3 1 3 3 ...
+ $ thalach : num  150 108 129 187 172 178 160 163 147 155 ...
+ $ exang   : logi  FALSE TRUE TRUE FALSE FALSE FALSE ...
+ $ oldpeak : num  2.3 1.5 2.6 3.5 1.4 0.8 3.6 0.6 1.4 3.1 ...
+ $ slope   : Factor w/ 3 levels "1","2","3": 3 2 2 3 1 1 3 1 2 3 ...
+ $ ca      : num  0 3 2 0 0 0 2 0 1 0 ...
+ $ thal    : Factor w/ 3 levels "3","6","7": 2 1 3 1 1 1 1 1 3 3 ...
+ $ class   : int  0 2 1 0 0 0 3 0 2 1 ...
+ - attr(*, "na.action")= 'omit' Named int [1:6] 88 167 193 267 288 303
+  ..- attr(*, "names")= chr [1:6] "88" "167" "193" "267" ...
+
+Resumen:
+      age           sex          cp         trestbps          chol      
+ Min.   :29.00   Mode :logical   1: 23   Min.   : 94.0   Min.   :126.0  
+ 1st Qu.:48.00   FALSE:96        2: 49   1st Qu.:120.0   1st Qu.:211.0  
+ Median :56.00   TRUE :201       3: 83   Median :130.0   Median :243.0  
+ Mean   :54.54                   4:142   Mean   :131.7   Mean   :247.4  
+ 3rd Qu.:61.00                           3rd Qu.:140.0   3rd Qu.:276.0  
+ Max.   :77.00                           Max.   :200.0   Max.   :564.0  
+    fbs          restecg    thalach        exang            oldpeak     
+ Mode :logical   0:147   Min.   : 71.0   Mode :logical   Min.   :0.000  
+ FALSE:254       1:  4   1st Qu.:133.0   FALSE:200       1st Qu.:0.000  
+ TRUE :43        2:146   Median :153.0   TRUE :97        Median :0.800  
+                         Mean   :149.6                   Mean   :1.056  
+                         3rd Qu.:166.0                   3rd Qu.:1.600  
+                         Max.   :202.0                   Max.   :6.200  
+ slope         ca         thal        class       
+ 1:139   Min.   :0.0000   3:164   Min.   :0.0000  
+ 2:137   1st Qu.:0.0000   6: 18   1st Qu.:0.0000  
+ 3: 21   Median :0.0000   7:115   Median :0.0000  
+         Mean   :0.6768           Mean   :0.9461  
+         3rd Qu.:1.0000           3rd Qu.:2.0000  
+         Max.   :3.0000           Max.   :4.0000  
+
+Distribución original de 'class':
+
+  0   1   2   3   4 
+160  54  35  35  13 
+
+Distribución de la variable binaria 'Y_bin':
+
+   sano enfermo 
+    160     137 
+
+Proporción de pacientes sanos y enfermos:
+
+   sano enfermo 
+ 0.5387  0.4613 
+
+PREPARACIÓN DE DATOS PARA MODELOS BINARIOS
+==========================================
+
+Tamaño del conjunto de entrenamiento: 207 
+Tamaño del conjunto de prueba: 90 
+Distribución en entrenamiento:
+
+   sano enfermo 
+    112      95 
+
+(b) RED NEURONAL CON 3 NEURONAS
+================================
+
+Matriz de confusión (3 neuronas):
+         Predicho
+Verdadero sano enfermo
+  sano      42       6
+  enfermo   10      32
+                     Modelo Accuracy Sensitivity Specificity    PPV    NPV
+1 Red Neuronal (3 neuronas)   0.8222      0.7619       0.875 0.8421 0.8077
+   Gmean F1_Score    MCC
+1 0.8165      0.8 0.6433
+
+(c) RED NEURONAL CON 5 NEURONAS
+================================
+
+Matriz de confusión (5 neuronas):
+         Predicho
+Verdadero sano enfermo
+  sano      41       7
+  enfermo   13      29
+                     Modelo Accuracy Sensitivity Specificity    PPV    NPV
+1 Red Neuronal (5 neuronas)   0.7778      0.6905      0.8542 0.8056 0.7593
+  Gmean F1_Score    MCC
+1 0.768   0.7436 0.5546
+
+(d) RED NEURONAL CON 10 NEURONAS
+=================================
+
+Matriz de confusión (10 neuronas):
+         Predicho
+Verdadero sano enfermo
+  sano      44       4
+  enfermo    9      33
+                      Modelo Accuracy Sensitivity Specificity    PPV    NPV
+1 Red Neuronal (10 neuronas)   0.8556      0.7857      0.9167 0.8919 0.8302
+   Gmean F1_Score    MCC
+1 0.8487   0.8354 0.7122
+================================================================================
+RESULTADOS DEL ANÁLISIS — Lista 05: Redes Neuronales
+Generado: 2025-11-16 08:00:42 
+================================================================================
+
+
+(a) Estructura del dataset 'heart':
+'data.frame':	297 obs. of  14 variables:
+ $ age     : num  63 67 67 37 41 56 62 57 63 53 ...
+ $ sex     : logi  TRUE TRUE TRUE TRUE FALSE TRUE ...
+ $ cp      : Factor w/ 4 levels "1","2","3","4": 1 4 4 3 2 2 4 4 4 4 ...
+ $ trestbps: num  145 160 120 130 130 120 140 120 130 140 ...
+ $ chol    : num  233 286 229 250 204 236 268 354 254 203 ...
+ $ fbs     : logi  TRUE FALSE FALSE FALSE FALSE FALSE ...
+ $ restecg : Factor w/ 3 levels "0","1","2": 3 3 3 1 3 1 3 1 3 3 ...
+ $ thalach : num  150 108 129 187 172 178 160 163 147 155 ...
+ $ exang   : logi  FALSE TRUE TRUE FALSE FALSE FALSE ...
+ $ oldpeak : num  2.3 1.5 2.6 3.5 1.4 0.8 3.6 0.6 1.4 3.1 ...
+ $ slope   : Factor w/ 3 levels "1","2","3": 3 2 2 3 1 1 3 1 2 3 ...
+ $ ca      : num  0 3 2 0 0 0 2 0 1 0 ...
+ $ thal    : Factor w/ 3 levels "3","6","7": 2 1 3 1 1 1 1 1 3 3 ...
+ $ class   : int  0 2 1 0 0 0 3 0 2 1 ...
+ - attr(*, "na.action")= 'omit' Named int [1:6] 88 167 193 267 288 303
+  ..- attr(*, "names")= chr [1:6] "88" "167" "193" "267" ...
+
+(a) Resumen estadístico inicial:
+      age           sex          cp         trestbps          chol      
+ Min.   :29.00   Mode :logical   1: 23   Min.   : 94.0   Min.   :126.0  
+ 1st Qu.:48.00   FALSE:96        2: 49   1st Qu.:120.0   1st Qu.:211.0  
+ Median :56.00   TRUE :201       3: 83   Median :130.0   Median :243.0  
+ Mean   :54.54                   4:142   Mean   :131.7   Mean   :247.4  
+ 3rd Qu.:61.00                           3rd Qu.:140.0   3rd Qu.:276.0  
+ Max.   :77.00                           Max.   :200.0   Max.   :564.0  
+    fbs          restecg    thalach        exang            oldpeak     
+ Mode :logical   0:147   Min.   : 71.0   Mode :logical   Min.   :0.000  
+ FALSE:254       1:  4   1st Qu.:133.0   FALSE:200       1st Qu.:0.000  
+ TRUE :43        2:146   Median :153.0   TRUE :97        Median :0.800  
+                         Mean   :149.6                   Mean   :1.056  
+                         3rd Qu.:166.0                   3rd Qu.:1.600  
+                         Max.   :202.0                   Max.   :6.200  
+ slope         ca         thal        class       
+ 1:139   Min.   :0.0000   3:164   Min.   :0.0000  
+ 2:137   1st Qu.:0.0000   6: 18   1st Qu.:0.0000  
+ 3: 21   Median :0.0000   7:115   Median :0.0000  
+         Mean   :0.6768           Mean   :0.9461  
+         3rd Qu.:1.0000           3rd Qu.:2.0000  
+         Max.   :3.0000           Max.   :4.0000  
+
+(a) Cuadro de frecuencia de 'class' (original):
+  Clase Frecuencia Proporcion
+1     0        160     0.5387
+2     1         54     0.1818
+3     2         35     0.1178
+4     3         35     0.1178
+5     4         13     0.0438
+
+Distribución de Y_bin (absoluta / proporción):
+
+neg pos 
+160 137 
+
+   neg    pos 
+0.5387 0.4613 
+
+Tamaños Train / Test:
+Train: 207  Test: 90 
+Proporciones en Train:
+
+      neg       pos 
+0.5410628 0.4589372 
+Proporciones en Test:
+
+      neg       pos 
+0.5333333 0.4666667 
+
+(b) Red neuronal (size = 3) - métricas en TEST:
+  Accuracy Sensitivity Specificity    PPV    NPV  Gmean     F1    MCC
+1   0.7889      0.6667      0.8958 0.8485 0.7544 0.7728 0.7467 0.5823
+
+(c) Red neuronal (size = 5) - métricas en TEST:
+  Accuracy Sensitivity Specificity    PPV    NPV  Gmean     F1    MCC
+1   0.7444      0.6429      0.8333 0.7714 0.7273 0.7319 0.7013 0.4873
+
+(d) Red neuronal (size = 10) - métricas en TEST:
+  Accuracy Sensitivity Specificity   PPV    NPV  Gmean     F1    MCC
+1   0.7889      0.6429      0.9167 0.871 0.7458 0.7676 0.7397 0.5874
+
+(c) Red neuronal (size = 5) - métricas en TEST:
+  Accuracy Sensitivity Specificity    PPV    NPV  Gmean     F1    MCC
+1   0.7444      0.6429      0.8333 0.7714 0.7273 0.7319 0.7013 0.4873
+
+(d) Red neuronal (size = 10) - métricas en TEST:
+  Accuracy Sensitivity Specificity   PPV    NPV  Gmean     F1    MCC
+1   0.7889      0.6429      0.9167 0.871 0.7458 0.7676 0.7397 0.5874
+=============================================================
+RESULTADOS - Lista 05: Redes Neuronales
+Generado: 2025-11-16 10:10:47 
+Archivo de salida: RN_Results_CGPT.txt 
+=============================================================
+
+Versiones de paquetes:
+ nnet: 7.3.19 
+ caret: 6.0.94 
+ recipes: 1.3.1 
+
+(a) Estructura y resumen del dataset 'heart':
+'data.frame':	297 obs. of  14 variables:
+ $ age     : num  63 67 67 37 41 56 62 57 63 53 ...
+ $ sex     : logi  TRUE TRUE TRUE TRUE FALSE TRUE ...
+ $ cp      : Factor w/ 4 levels "1","2","3","4": 1 4 4 3 2 2 4 4 4 4 ...
+ $ trestbps: num  145 160 120 130 130 120 140 120 130 140 ...
+ $ chol    : num  233 286 229 250 204 236 268 354 254 203 ...
+ $ fbs     : logi  TRUE FALSE FALSE FALSE FALSE FALSE ...
+ $ restecg : Factor w/ 3 levels "0","1","2": 3 3 3 1 3 1 3 1 3 3 ...
+ $ thalach : num  150 108 129 187 172 178 160 163 147 155 ...
+ $ exang   : logi  FALSE TRUE TRUE FALSE FALSE FALSE ...
+ $ oldpeak : num  2.3 1.5 2.6 3.5 1.4 0.8 3.6 0.6 1.4 3.1 ...
+ $ slope   : Factor w/ 3 levels "1","2","3": 3 2 2 3 1 1 3 1 2 3 ...
+ $ ca      : num  0 3 2 0 0 0 2 0 1 0 ...
+ $ thal    : Factor w/ 3 levels "3","6","7": 2 1 3 1 1 1 1 1 3 3 ...
+ $ class   : int  0 2 1 0 0 0 3 0 2 1 ...
+ - attr(*, "na.action")= 'omit' Named int [1:6] 88 167 193 267 288 303
+  ..- attr(*, "names")= chr [1:6] "88" "167" "193" "267" ...
+
+Resumen (estadístico):
+      age           sex          cp         trestbps          chol      
+ Min.   :29.00   Mode :logical   1: 23   Min.   : 94.0   Min.   :126.0  
+ 1st Qu.:48.00   FALSE:96        2: 49   1st Qu.:120.0   1st Qu.:211.0  
+ Median :56.00   TRUE :201       3: 83   Median :130.0   Median :243.0  
+ Mean   :54.54                   4:142   Mean   :131.7   Mean   :247.4  
+ 3rd Qu.:61.00                           3rd Qu.:140.0   3rd Qu.:276.0  
+ Max.   :77.00                           Max.   :200.0   Max.   :564.0  
+    fbs          restecg    thalach        exang            oldpeak     
+ Mode :logical   0:147   Min.   : 71.0   Mode :logical   Min.   :0.000  
+ FALSE:254       1:  4   1st Qu.:133.0   FALSE:200       1st Qu.:0.000  
+ TRUE :43        2:146   Median :153.0   TRUE :97        Median :0.800  
+                         Mean   :149.6                   Mean   :1.056  
+                         3rd Qu.:166.0                   3rd Qu.:1.600  
+                         Max.   :202.0                   Max.   :6.200  
+ slope         ca         thal        class       
+ 1:139   Min.   :0.0000   3:164   Min.   :0.0000  
+ 2:137   1st Qu.:0.0000   6: 18   1st Qu.:0.0000  
+ 3: 21   Median :0.0000   7:115   Median :0.0000  
+         Mean   :0.6768           Mean   :0.9461  
+         3rd Qu.:1.0000           3rd Qu.:2.0000  
+         Max.   :3.0000           Max.   :4.0000  
+
+Cuadro 1 - Distribución original de 'class' (absoluto / proporción):
+  Clase Frecuencia Proporcion
+1     0        160     0.5387
+2     1         54     0.1818
+3     2         35     0.1178
+4     3         35     0.1178
+5     4         13     0.0438
+
+Comentario: el Cuadro 1 muestra la frecuencia absoluta y la proporción de cada nivel
+de la variable 'class' antes de la binarización.
+
+(a) Distribución tras binarización (Y_bin):
+
+neg pos 
+160 137 
+Proporciones:
+
+   neg    pos 
+0.5387 0.4613 
+
+La variable binaria 'Y_bin' se usará en los modelos binarios.
+
+(a) Partición estratificada 70/30 creada y guardada en: split_fixed.rds 
+Tamaños Train / Test: 207 / 90 
+Proporciones Train:
+
+      neg       pos 
+0.5410628 0.4589372 
+Proporciones Test:
+
+      neg       pos 
+0.5333333 0.4666667 
+
+(b) Preprocesamiento completado. Número de predictores tras dummies: 19 
+
+(b) Red neuronal (size = 3) - métricas en TEST:
+  Accuracy Sensitivity Specificity PPV NPV Gmean F1 MCC
+1       NA          NA          NA  NA  NA    NA NA  NA
+Matriz de confusión (size=3):
+< table of extent 0 x 2 >
+
+(c) Red neuronal (size = 5) - métricas en TEST:
+  Accuracy Sensitivity Specificity PPV NPV Gmean F1 MCC
+1       NA          NA          NA  NA  NA    NA NA  NA
+Matriz de confusión (size=5):
+< table of extent 0 x 2 >
+
+(d) Red neuronal (size = 10) - métricas en TEST:
+  Accuracy Sensitivity Specificity PPV NPV Gmean F1 MCC
+1       NA          NA          NA  NA  NA    NA NA  NA
+Matriz de confusión (size=10):
+< table of extent 0 x 2 >
+
+(e) Tabla comparativa de redes neuronales (métricas):
+           Accuracy Sensitivity Specificity PPV NPV Gmean F1 MCC
+NN_size_3        NA          NA          NA  NA  NA    NA NA  NA
+NN_size_5        NA          NA          NA  NA  NA    NA NA  NA
+NN_size_10       NA          NA          NA  NA  NA    NA NA  NA
+
+(f) Clasificación multiclase - matriz de confusión:
+          Reference
+Prediction  0  1  2  3  4
+         0 48  0  0  0  0
+         1  0 16  0  0  0
+         2  0  0  8  0  0
+         3  0  0  1  9  4
+         4  0  0  0  3  1
+
+(f) Métricas globales (multiclase):
+Accuracy: 0.9111 
+Kappa  : 0.8636 
+
+Modelos y resultados guardados:
+ - Objetos RDS: Lista05_NN_saved_objects.rds
+ - Resumen CSV : Lista05_NN_summary.csv
+ - Split guardado: split_fixed.rds
+
+FIN DEL ANÁLISIS - Lista 05 (Redes Neuronales)
+Se escribió todo en: RN_Results_CGPT.txt 
+Archivos adicionales generados:
+ - Lista05_NN_saved_objects.rds
+ - Lista05_NN_summary.csv
+ - split_fixed.rds
+
+✓ Resultados escritos en: RN_Results_CGPT.txt 
+✓ Split guardado en: split_fixed.rds
+✓ Objetos guardados en: Lista05_NN_saved_objects.rds
+================================================================================
+RESULTADOS ÓPTIMOS - Lista 05: Redes Neuronales
+Generado: 2025-11-16 10:22:55 
+Método: Preprocesamiento robusto con recipes + MaxNWts optimizados
+================================================================================
+
+VERSIÓN DE PAQUETES (para reproducibilidad):
+ nnet   : 7.3.19 
+ caret  : 6.0.94 
+ recipes: 1.3.1 
+ rsample: 1.3.1 
+
+(a) ANÁLISIS EXPLORATORIO INICIAL
+==================================
+
+Estructura del dataset:
+'data.frame':	297 obs. of  14 variables:
+ $ age     : num  63 67 67 37 41 56 62 57 63 53 ...
+ $ sex     : logi  TRUE TRUE TRUE TRUE FALSE TRUE ...
+ $ cp      : Factor w/ 4 levels "1","2","3","4": 1 4 4 3 2 2 4 4 4 4 ...
+ $ trestbps: num  145 160 120 130 130 120 140 120 130 140 ...
+ $ chol    : num  233 286 229 250 204 236 268 354 254 203 ...
+ $ fbs     : logi  TRUE FALSE FALSE FALSE FALSE FALSE ...
+ $ restecg : Factor w/ 3 levels "0","1","2": 3 3 3 1 3 1 3 1 3 3 ...
+ $ thalach : num  150 108 129 187 172 178 160 163 147 155 ...
+ $ exang   : logi  FALSE TRUE TRUE FALSE FALSE FALSE ...
+ $ oldpeak : num  2.3 1.5 2.6 3.5 1.4 0.8 3.6 0.6 1.4 3.1 ...
+ $ slope   : Factor w/ 3 levels "1","2","3": 3 2 2 3 1 1 3 1 2 3 ...
+ $ ca      : num  0 3 2 0 0 0 2 0 1 0 ...
+ $ thal    : Factor w/ 3 levels "3","6","7": 2 1 3 1 1 1 1 1 3 3 ...
+ $ class   : int  0 2 1 0 0 0 3 0 2 1 ...
+ - attr(*, "na.action")= 'omit' Named int [1:6] 88 167 193 267 288 303
+  ..- attr(*, "names")= chr [1:6] "88" "167" "193" "267" ...
+
+Resumen estadístico:
+      age           sex          cp         trestbps          chol      
+ Min.   :29.00   Mode :logical   1: 23   Min.   : 94.0   Min.   :126.0  
+ 1st Qu.:48.00   FALSE:96        2: 49   1st Qu.:120.0   1st Qu.:211.0  
+ Median :56.00   TRUE :201       3: 83   Median :130.0   Median :243.0  
+ Mean   :54.54                   4:142   Mean   :131.7   Mean   :247.4  
+ 3rd Qu.:61.00                           3rd Qu.:140.0   3rd Qu.:276.0  
+ Max.   :77.00                           Max.   :200.0   Max.   :564.0  
+    fbs          restecg    thalach        exang            oldpeak     
+ Mode :logical   0:147   Min.   : 71.0   Mode :logical   Min.   :0.000  
+ FALSE:254       1:  4   1st Qu.:133.0   FALSE:200       1st Qu.:0.000  
+ TRUE :43        2:146   Median :153.0   TRUE :97        Median :0.800  
+                         Mean   :149.6                   Mean   :1.056  
+                         3rd Qu.:166.0                   3rd Qu.:1.600  
+                         Max.   :202.0                   Max.   :6.200  
+ slope         ca         thal        class       
+ 1:139   Min.   :0.0000   3:164   Min.   :0.0000  
+ 2:137   1st Qu.:0.0000   6: 18   1st Qu.:0.0000  
+ 3: 21   Median :0.0000   7:115   Median :0.0000  
+         Mean   :0.6768           Mean   :0.9461  
+         3rd Qu.:1.0000           3rd Qu.:2.0000  
+         Max.   :3.0000           Max.   :4.0000  
+
+CUADRO 1 - Distribución original de 'class':
+  Clase Frecuencia Proporción
+1     0        160     0.5387
+2     1         54     0.1818
+3     2         35     0.1178
+4     3         35     0.1178
+5     4         13     0.0438
+
+JUSTIFICACIÓN CLÍNICA DE LA BINARIZACIÓN:
+- Clase 0: Ausencia de enfermedad cardíaca → 'negativo'
+- Clases 1-4: Presencia de enfermedad cardíaca → 'positivo'
+- Agrupación clínicamente relevante para diagnóstico binario
+
+Distribución después de la binarización:
+
+neg pos 
+160 137 
+Proporciones:
+
+   neg    pos 
+0.5387 0.4613 
+
+(a) PARTICIONES Y ESTRATIFICACIÓN
+==================================
+
+✓ Partición 70/30 estratificada guardada en: split_fixed.rds 
+Tamaños de conjuntos:
+- Entrenamiento: 207 observaciones
+- Prueba:       90 observaciones
+
+Distribución en entrenamiento:
+
+      neg       pos 
+0.5410628 0.4589372 
+
+Distribución en prueba:
+
+      neg       pos 
+0.5333333 0.4666667 
+
+(b) PREPROCESAMIENTO CON RECIPES
+================================
+
+Variables predictoras utilizadas ( 13 ):
+ [1] "age"      "sex"      "cp"       "trestbps" "chol"     "fbs"     
+ [7] "restecg"  "thalach"  "exang"    "oldpeak"  "slope"    "ca"      
+[13] "thal"    
+✓ Pipeline de preprocesamiento guardado en: rec_prep_optimal.rds
+Preprocesamiento completado exitosamente:
+- Predictores originales: 13 
+- Predictores tras dummies: 19 
+- Variables eliminadas por varianza cero: -6 
+
+(b)-(d) ENTRENAMIENTO DE REDES NEURONALES
+=========================================
+
+Configuración de redes:
+- Neuronas de entrada: 19 
+- Cálculo automático de límites de pesos
+
+(b) RED NEURONAL - 3 NEURONAS:
+Límite de pesos: 77 
+  Accuracy Sensitivity Specificity PPV NPV Gmean F1_Score MCC
+1       NA          NA          NA  NA  NA    NA       NA  NA
+Matriz de confusión:
+        Verdadero
+Predicho neg pos
+     neg   0   0
+     pos   0   0
+
+(c) RED NEURONAL - 5 NEURONAS:
+Límite de pesos: 128 
+  Accuracy Sensitivity Specificity PPV NPV Gmean F1_Score MCC
+1       NA          NA          NA  NA  NA    NA       NA  NA
+Matriz de confusión:
+        Verdadero
+Predicho neg pos
+     neg   0   0
+     pos   0   0
+
+(d) RED NEURONAL - 10 NEURONAS:
+Límite de pesos: 254 
+  Accuracy Sensitivity Specificity PPV NPV Gmean F1_Score MCC
+1       NA          NA          NA  NA  NA    NA       NA  NA
+Matriz de confusión:
+        Verdadero
+Predicho neg pos
+     neg   0   0
+     pos   0   0
+
+(e) COMPARACIÓN DETALLADA DE MODELOS
+====================================
+
+TABLA COMPARATIVA - MÉTRICAS DE DESEMPEÑO:
+               Accuracy Sensitivity Specificity PPV NPV Gmean F1_Score MCC
+NN_3_neuronas        NA          NA          NA  NA  NA    NA       NA  NA
+NN_5_neuronas        NA          NA          NA  NA  NA    NA       NA  NA
+NN_10_neuronas       NA          NA          NA  NA  NA    NA       NA  NA
+
+ANÁLISIS COMPARATIVO:
+- Mejor modelo:  
+- Mejor Accuracy:  
+- Mejor MCC:  
+- Rango de Accuracy: NA NA 
+- Rango de MCC: NA NA 
+
+(f) CLASIFICACIÓN MULTICLASE
+============================
+
+Distribución de clases en conjunto multiclase:
+Entrenamiento:
+
+  0   1   2   3   4 
+112  38  26  23   8 
+Prueba:
+
+ 0  1  2  3  4 
+48 16  9 12  5 
+
+RED NEURONAL MULTICLASE - 5 NEURONAS:
+Límite de pesos: 156 
+Matriz de confusión:
+          Reference
+Prediction  0  1  2  3  4
+         0 48  0  0  0  0
+         1  0 16  0  0  0
+         2  0  0  8  0  0
+         3  0  0  1  9  4
+         4  0  0  0  3  1
+
+MÉTRICAS MULTICLASE GLOBALES:
+Exactitud (Accuracy): 0.9111 
+Kappa: 0.8636 
+Intervalo de confianza (95%): 0.8323 - 0.9608 
+
+MÉTRICAS POR CLASE (Sensibilidad):
+         Sensitivity
+Class: 0      1.0000
+Class: 1      1.0000
+Class: 2      0.8889
+Class: 3      0.7500
+Class: 4      0.2000
+
+(9) GUARDADO DE RESULTADOS
+==========================
+
+ARCHIVOS GUARDADOS:
+✓ Lista05_NN_optimal_objects.rds - Todos los modelos y resultados
+✓ Lista05_NN_optimal_summary.csv - Resumen comparativo
+✓ split_fixed.rds - Partición de datos
+✓ rec_prep_optimal.rds - Pipeline de preprocesamiento
+✓ RN_Results_Optimal.txt - Reporte completo de análisis
+
+RESUMEN EJECUTIVO
+=================
+
+MODELOS ENTRENADOS EXITOSAMENTE:
+- 3 redes neuronales binarias (3, 5, 10 neuronas)
+- 1 red neuronal multiclase (5 neuronas)
+- Preprocesamiento robusto con validación
+
+MEJOR MODELO BINARIO:  
+- Accuracy:  
+- MCC:  
+- Balance sensibilidad/especificidad:  /  
+
+DESEMPEÑO MULTICLASE:
+- Accuracy: 0.9111 
+- Complejidad: 5 clases vs 2 clases (binario)
+- Reto: Distinción entre grados de enfermedad
+
+REPRODUCIBILIDAD GARANTIZADA:
+- Semillas específicas para cada operación
+- Versiones de paquetes registradas
+- Pipelines de preprocesamiento guardados
+- Metadatos completos incluidos
+
+================================================================================
+ANÁLISIS COMPLETADO EXITOSAMENTE - LISTA 05: REDES NEURONALES
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+
+🎯 ANÁLISIS ÓPTIMO COMPLETADO
+📊 Resultados guardados en: RN_Results_Optimal.txt 
+💾 Objetos guardados en: Lista05_NN_optimal_objects.rds
+🔧 Preprocesamiento guardado en: rec_prep_optimal.rds
+📈 Resumen exportado en: Lista05_NN_optimal_summary.csv
+✅ Reproducibilidad garantizada con semillas y versiones
+Resultados Lista 05 – Redes Neuronales
+
+(a) Distribución Y:
+
+neg pos 
+160 137 
+
+Tamaños train/test: 207 / 90 
+Proporción train:
+
+      neg       pos 
+0.5410628 0.4589372 
+Proporción test:
+
+      neg       pos 
+0.5333333 0.4666667 
+
+---- NNET size = 3 ----
+   Accuracy Sensitivity Specificity       PPV  NPV     Gmean        F1
+1 0.7777778   0.6666667       0.875 0.8235294 0.75 0.7637626 0.7368421
+        MCC
+1 0.5573704
+
+---- NNET size = 5 ----
+   Accuracy Sensitivity Specificity       PPV       NPV     Gmean        F1
+1 0.7222222    0.547619       0.875 0.7931034 0.6885246 0.6922187 0.6478873
+        MCC
+1 0.4511598
+
+---- NNET size = 10 ----
+   Accuracy Sensitivity Specificity       PPV       NPV     Gmean        F1
+1 0.7555556   0.5714286   0.9166667 0.8571429 0.7096774 0.7237469 0.6857143
+       MCC
+1 0.525987
+
+Resumen NNET:
+        Accuracy Sensitivity Specificity       PPV       NPV     Gmean
+nnet3  0.7777778   0.6666667   0.8750000 0.8235294 0.7500000 0.7637626
+nnet5  0.7222222   0.5476190   0.8750000 0.7931034 0.6885246 0.6922187
+nnet10 0.7555556   0.5714286   0.9166667 0.8571429 0.7096774 0.7237469
+              F1       MCC
+nnet3  0.7368421 0.5573704
+nnet5  0.6478873 0.4511598
+nnet10 0.6857143 0.5259870
+
+---- SVM Results ----
+Hard:
+   Accuracy Sensitivity Specificity      PPV       NPV    Gmean       F1
+1 0.4888889    0.452381   0.5208333 0.452381 0.5208333 0.485402 0.452381
+          MCC
+1 -0.02678571
+
+Soft:
+   Accuracy Sensitivity Specificity       PPV       NPV     Gmean        F1
+1 0.7777778   0.5952381      0.9375 0.8928571 0.7258065 0.7470179 0.7142857
+        MCC
+1 0.5740955
+
+Tuned Linear (C=0.1):
+   Accuracy Sensitivity Specificity       PPV       NPV     Gmean        F1
+1 0.8111111   0.6666667      0.9375 0.9032258 0.7627119 0.7905694 0.7671233
+        MCC
+1 0.6343007
+
+Tuned RBF (C=10, gamma=0.0078125):
+   Accuracy Sensitivity Specificity     PPV       NPV    Gmean        F1
+1 0.7777778   0.6428571   0.8958333 0.84375 0.7413793 0.758876 0.7297297
+        MCC
+1 0.5614299
+
+---- Multiclase ----
+    True
+Pred  0  1  2  3  4
+   0 39 10  1  1  0
+   1  3  3  7  5  3
+   2  3  0  2  1  0
+   3  2  1  1  3  3
+   4  0  2  0  1  0
+Accuracy multiclass: 0.5164835 
+
+FIN DEL SCRIPT
+Archivo generado: C:\Users\salva\Documents\TOPICOS_CIENCIA_DATOS\Resultados_Lista05.txt 
+Resultados - Lista 05 (a)-(f) - usando variables Lista 04 para (e)
+
