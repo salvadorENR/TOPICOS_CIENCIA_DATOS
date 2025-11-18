@@ -1,0 +1,228 @@
+==========================================================
+ INICIO DEL REPORTE: FIX DE COLUMNAS 
+==========================================================
+
+indexing student-mat.csv [==================================] 2.15GB/s, eta:  0s                                                                                ¡Archivo cargado! Nombres de columnas limpiados.
+
+=== DISTRIBUCIÓN DE LA CLASE ===
+
+yes  no 
+265 130 
+
+=== VARIABLES SELECCIONADAS (FILTRADAS) ===
+ [1] "failures"  "goout"     "schoolsup" "reason"    "romantic"  "higher"   
+ [7] "guardian"  "famsize"   "internet"  "famrel"   
+
+=== TAMAÑO DE LOS SETS ===
+Entrenamiento: 295 
+Prueba: 100 
+==========================================================
+ INICIO DEL REPORTE: VERSION FINAL 
+==========================================================
+
+¡Archivo cargado exitosamente!
+
+=== DISTRIBUCIÓN DE LA CLASE ===
+
+yes  no 
+265 130 
+
+... Ejecutando Selección de Variables ...
+
+=== VARIABLES DEFINITIVAS PARA EL MODELO ===
+ [1] "failures"  "goout"     "schoolsup" "reason"    "romantic"  "higher"   
+ [7] "guardian"  "famsize"   "internet"  "famrel"   
+
+Entrenamiento: 295  | Prueba: 100 
+==========================================================
+ REPORTE FINAL: SELECCIÓN POR CRITERIO EXPERTO (NCTM) 
+==========================================================
+
+¡Datos cargados correctamente!
+
+=== DISTRIBUCIÓN DE LA CLASE ===
+
+yes  no 
+265 130 
+
+[INFO] Omitiendo mRMRe por error de librería.
+[INFO] Aplicando selección basada en literatura (NCTM Standards).
+
+=== VARIABLES SELECCIONADAS ===
+ [1] "failures"  "absences"  "Medu"      "Fedu"      "goout"     "Walc"     
+ [7] "studytime" "internet"  "freetime"  "age"      
+
+Entrenamiento: 295  | Prueba: 100 
+==========================================================
+ REPORTE FINAL: SELECCIÓN EXPERTA (SIN ERRORES) 
+==========================================================
+
+¡Datos cargados correctamente!
+
+=== DISTRIBUCIÓN DE LA CLASE ===
+
+yes  no 
+265 130 
+
+[INFO] Usando Selección Experta (NCTM Standards).
+
+=== VARIABLES SELECCIONADAS ===
+ [1] "failures"  "absences"  "Medu"      "Fedu"      "goout"     "Walc"     
+ [7] "studytime" "internet"  "freetime"  "age"      
+
+Entrenamiento: 295  | Prueba: 100 
+==========================================================
+ REPORTE FINAL: SIN ERRORES DE TABLA 
+==========================================================
+
+¡Datos cargados correctamente!
+
+=== DISTRIBUCIÓN DE LA CLASE ===
+
+yes  no 
+265 130 
+
+=== VARIABLES SELECCIONADAS (LITERATURA) ===
+ [1] "failures"  "absences"  "Medu"      "Fedu"      "goout"     "Walc"     
+ [7] "studytime" "internet"  "freetime"  "age"      
+==========================================================
+ REPORTE FINAL: EJECUCIÓN LIMPIA 
+==========================================================
+
+¡Datos cargados correctamente!
+
+=== DISTRIBUCIÓN DE LA CLASE ===
+
+yes  no 
+265 130 
+
+=== VARIABLES SELECCIONADAS ===
+ [1] "failures"  "absences"  "Medu"      "Fedu"      "goout"     "Walc"     
+ [7] "studytime" "internet"  "freetime"  "age"      
+
+Entrenamiento: 295  | Prueba: 100 
+==========================================================
+ REPORTE FINAL: EJECUCIÓN LIMPIA 
+==========================================================
+
+¡Datos cargados correctamente!
+
+=== DISTRIBUCIÓN DE LA CLASE ===
+
+yes  no 
+265 130 
+
+=== VARIABLES SELECCIONADAS ===
+ [1] "failures"  "absences"  "Medu"      "Fedu"      "goout"     "Walc"     
+ [7] "studytime" "internet"  "freetime"  "age"      
+
+Entrenamiento: 295  | Prueba: 100 
+
+----------------------------------------------------------
+=== 1. KNN (k=5) ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.650       0.836       0.273       0.477 
+>> Con SMOTE:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.600       0.627       0.545       0.585 
+
+----------------------------------------------------------
+=== 2. SVM (Radial) ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.700       0.925       0.242       0.474 
+>> Con SMOTE:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.690       0.761       0.545       0.644 
+
+----------------------------------------------------------
+=== 3. REGRESIÓN LOGÍSTICA ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.710       0.910       0.303       0.525 
+
+----------------------------------------------------------
+=== 4. RED NEURONAL ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.590       0.642       0.485       0.558 
+
+==========================================================
+ FIN DEL REPORTE - RESULTADOS GUARDADOS 
+==========================================================
+------------------
+=== 3. REGRESIÓN LOGÍSTICA ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.710       0.910       0.303       0.525 
+
+----------------------------------------------------------
+=== 4. RED NEURONAL ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.590       0.642       0.485       0.558 
+
+==========================================================
+ FIN DEL REPORTE - RESULTADOS GUARDADOS 
+==========================================================
+------------------
+=== 3. REGRESIÓN LOGÍSTICA ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.710       0.910       0.303       0.525 
+
+----------------------------------------------------------
+=== 4. RED NEURONAL ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.590       0.642       0.485       0.558 
+
+==========================================================
+ FIN DEL REPORTE - RESULTADOS GUARDADOS 
+==========================================================
+------------------
+=== 3. REGRESIÓN LOGÍSTICA ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.710       0.910       0.303       0.525 
+
+----------------------------------------------------------
+=== 4. RED NEURONAL ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.590       0.642       0.485       0.558 
+
+==========================================================
+ FIN DEL REPORTE - RESULTADOS GUARDADOS 
+==========================================================
+acy Sensitivity Specificity      G_Mean 
+      0.690       0.761       0.545       0.644 
+
+----------------------------------------------------------
+=== 3. REGRESIÓN LOGÍSTICA ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.710       0.910       0.303       0.525 
+
+----------------------------------------------------------
+=== 4. RED NEURONAL ===
+----------------------------------------------------------
+>> Desbalanceado:
+   Accuracy Sensitivity Specificity      G_Mean 
+      0.590       0.642       0.485       0.558 
+
+==========================================================
+ FIN DEL REPORTE - RESULTADOS GUARDADOS 
+==========================================================
