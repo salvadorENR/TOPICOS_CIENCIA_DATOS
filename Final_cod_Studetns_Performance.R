@@ -94,12 +94,6 @@ cat("\n")
 df_final_vars <- datos[, c(final_vars, "Pass")] # Escenario CON SELECCIÓN
 
 # ==============================================================================
-# 3. GRÁFICOS DE CORRELACIÓN (ESCENARIO CON SELECCIÓN)
-# ==============================================================================
-# (Se omite generación de gráficos aquí para ahorrar tiempo de ejecución repetida, 
-# ya que ya se generaron anteriormente, pero el código sigue siendo válido si se requiere).
-
-# ==============================================================================
 # 4. FUNCIONES Y MÉTRICAS GLOBALES
 # ==============================================================================
 
