@@ -1,0 +1,49 @@
+REPORTE DE VISUALIZACIÓN DE MODELOS
+====================================
+Fecha: 2025-11-20 10:13:23 
+
+Entrenando los 3 mejores modelos para visualización...
+1. Entrenando Red Neuronal (5 neuronas)...
+2. Entrenando Red Neuronal (3 neuronas)...
+3. Entrenando SVM Radial...
+
+=== REPRESENTACIONES ALGEBRAICAS ===
+
+1. RED NEURONAL (5 neuronas) - Representación Conceptual:
+   f(x) = σ(W2 * φ(W1 * x + b1) + b2)
+   donde:
+   - x = [failures, goout, schoolsup, famrel] (entradas normalizadas)
+   - W1 = matriz de pesos capa oculta (4×5)
+   - b1 = vector de sesgo capa oculta (5×1)
+   - φ = función de activación (sigmoide/tanh)
+   - W2 = matriz de pesos capa salida (5×1)
+   - b2 = sesgo capa salida
+   - σ = sigmoide para probabilidad final
+
+2. SVM RADIAL - Representación:
+   f(x) = sign( Σ[α_i * y_i * K(x_i, x)] + b )
+   donde:
+   - K(x_i, x) = exp(-γ * ||x_i - x||²) (Kernel RBF)
+   - x_i = vectores de soporte
+   - α_i = coeficientes del modelo
+   - γ = parámetro del kernel
+   - b = término de sesgo
+
+Generando visualizaciones gráficas...
+   - Curva ROC guardada: Model_Visualizations/ROC_Curves.png
+   - Importancia de variables guardada: Model_Visualizations/Feature_Importance.png
+   - Diagrama de red neuronal guardado: Model_Visualizations/Neural_Network_Structure.png
+   - Superficie de decisión SVM guardada: Model_Visualizations/SVM_Decision_Surface.png
+   - Comparación de métricas guardada: Model_Visualizations/Metrics_Comparison.png
+
+=== VISUALIZACIONES COMPLETADAS ===
+Todas las gráficas guardadas en la carpeta: Model_Visualizations/
+Incluyen:
+1. Curvas ROC comparativas
+2. Importancia de variables por modelo
+3. Diagrama de estructura de red neuronal
+4. Superficie de decisión SVM
+5. Comparación de métricas de rendimiento
+
+====================================
+FIN DEL REPORTE DE VISUALIZACIÓN
